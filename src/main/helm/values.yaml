@@ -1,0 +1,14 @@
+app:
+  name: bff
+  image:
+    repository: "onecx/onecx-iam-bff"
+  operator:
+    # Permission
+    permission:
+      enabled: true
+      spec:
+        permissions:
+          iam:
+            read: permission on all GET requests and POST search
+            write: permission on PUT, POST, PATCH requests, where objects are saved or updated
+            delete: permission on all DELETE requests
