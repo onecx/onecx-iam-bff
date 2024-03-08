@@ -1,0 +1,14 @@
+version: 2
+updates:
+  - package-ecosystem: maven
+    directory: "/"
+    schedule:
+      interval: daily
+    labels:
+      - dependencies
+  - package-ecosystem: "docker"
+    directory: "/src/main/docker"
+    schedule:
+      interval: daily
+    labels:
+      - docker-image
