@@ -33,7 +33,7 @@ import io.quarkus.test.keycloak.client.KeycloakTestClient;
 @QuarkusTest
 @LogService
 @TestHTTPEndpoint(UsersRestController.class)
-public class UsersRestControllerTest extends AbstractTest {
+class UsersRestControllerTest extends AbstractTest {
 
     @InjectMockServerClient
     MockServerClient mockServerClient;
@@ -120,7 +120,7 @@ public class UsersRestControllerTest extends AbstractTest {
                 .contentType(APPLICATION_JSON)
                 .extract().as(ProblemDetailResponseDTO.class);
 
-        Assertions.assertEquals(res.getErrorCode(), "CONSTRAINT_VIOLATIONS");
+        Assertions.assertEquals("CONSTRAINT_VIOLATIONS", res.getErrorCode());
 
     }
 
