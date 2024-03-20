@@ -4,7 +4,7 @@ info:
   title: Keycloak user internal
   version: 1.0.0
 servers:
-  - url: "http://onecx-iam-kc-bff:8080"
+  - url: "http://onecx-iam-bff:8080"
 tags:
   - name: UsersInternal
     description: Keycloak user internal service
