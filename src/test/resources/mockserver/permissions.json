@@ -1,6 +1,6 @@
 [
   {
-    "id": "2",
+    "id": "1",
     "httpRequest": {
       "headers": {
         "apm-principal-token": [
@@ -15,11 +15,12 @@
         "json": {
           "appId": "onecx-iam-bff",
           "permissions": {
-            "iam": [
+            "user": [
               "read",
               "write",
               "delete"
             ],
+            "role": ["read"],
             "permissions": [
               "admin-write",
               "admin-read"
@@ -31,7 +32,7 @@
     }
   },
   {
-    "id": "3",
+    "id": "2",
     "httpRequest": {
       "headers": {
         "apm-principal-token": [
@@ -46,9 +47,8 @@
         "json": {
           "appId": "onecx-iam-bff",
           "permissions": {
-            "iam": [
-              "read"
-            ],
+            "user": ["read"],
+            "role": ["read"],
             "permissions": [
               "admin-write",
               "admin-read"

@@ -13,7 +13,7 @@ paths:
     post:
       x-onecx:
         permissions:
-          iam:
+          user:
             - read
       tags:
         - UsersInternal
@@ -42,7 +42,7 @@ paths:
     post:
       x-onecx:
         permissions:
-          iam:
+          role:
             - read
       tags:
         - RolesInternal
