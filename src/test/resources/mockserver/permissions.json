@@ -20,7 +20,11 @@
               "write",
               "delete"
             ],
-            "role": ["read"],
+            "role": [
+              "read",
+              "write",
+              "delete"
+            ],
             "permissions": [
               "admin-write",
               "admin-read"
