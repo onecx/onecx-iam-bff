@@ -130,7 +130,22 @@ class UsersRestControllerTest extends AbstractTest {
         Assertions.assertNotNull(res);
     }
 
-    // test bob cannot reset password
+    @Test
+    void resetPasswordTest_shouldReturnNotAuthorized_whenUserDoesNotHavePermissionToUserWrite() {
+        UserResetPasswordRequestDTO userResetPasswordRequestDTO = new UserResetPasswordRequestDTO();
+        userResetPasswordRequestDTO.setPassword("new_password");
+
+        //Restassured
+        given()
+                .when()
+                .auth().oauth2(keycloakClient.getAccessToken(USER))
+                .header(APM_HEADER_PARAM, USER)
+                .contentType(APPLICATION_JSON)
+                .body(userResetPasswordRequestDTO)
+                .put("/password")
+                .then()
+                .statusCode(FORBIDDEN.getStatusCode());
+    }
 
     @Test
     void searchUsersByCriteriaTest() {
