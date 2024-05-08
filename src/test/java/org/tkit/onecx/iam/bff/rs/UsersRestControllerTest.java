@@ -2,8 +2,7 @@ package org.tkit.onecx.iam.bff.rs;
 
 import static io.restassured.RestAssured.given;
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
-import static jakarta.ws.rs.core.Response.Status.BAD_REQUEST;
-import static jakarta.ws.rs.core.Response.Status.OK;
+import static jakarta.ws.rs.core.Response.Status.*;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
 
@@ -23,6 +22,7 @@ import org.tkit.onecx.iam.bff.rs.controllers.UsersRestController;
 import org.tkit.quarkus.log.cdi.LogService;
 
 import gen.org.tkit.onecx.iam.bff.rs.internal.model.ProblemDetailResponseDTO;
+import gen.org.tkit.onecx.iam.bff.rs.internal.model.UserResetPasswordRequestDTO;
 import gen.org.tkit.onecx.iam.bff.rs.internal.model.UserSearchCriteriaDTO;
 import gen.org.tkit.onecx.iam.kc.client.model.*;
 import io.quarkiverse.mockserver.test.InjectMockServerClient;
@@ -51,6 +51,86 @@ class UsersRestControllerTest extends AbstractTest {
             //  mockId not existing
         }
     }
+
+    @Test
+    void resetPasswordTest() {
+        //Mockserver
+        mockServerClient.when(request().withPath("/internal/users/password")
+                .withMethod(HttpMethod.PUT))
+                .withPriority(100)
+                .withId(mockId)
+                .respond(httpRequest -> response().withStatusCode((Response.Status.NO_CONTENT.getStatusCode()))
+                        .withContentType(MediaType.APPLICATION_JSON));
+
+        UserResetPasswordRequestDTO userResetPasswordRequestDTO = new UserResetPasswordRequestDTO();
+        userResetPasswordRequestDTO.setPassword("new_password");
+
+        //Restassured
+        given()
+                .when()
+                .auth().oauth2(keycloakClient.getAccessToken(ADMIN))
+                .header(APM_HEADER_PARAM, ADMIN)
+                .contentType(APPLICATION_JSON)
+                .body(userResetPasswordRequestDTO)
+                .put("/password")
+                .then()
+                .statusCode(NO_CONTENT.getStatusCode());
+    }
+
+    @Test
+    void resetPasswordTest_shouldReturnBadRequest_whenBodyIsRequestBodyEmpty() {
+
+        //Restassured
+        var res = given()
+                .when()
+                .auth().oauth2(keycloakClient.getAccessToken(ADMIN))
+                .header(APM_HEADER_PARAM, ADMIN)
+                .contentType(APPLICATION_JSON)
+                .put("/password")
+                .then()
+                .statusCode(BAD_REQUEST.getStatusCode())
+                .contentType(APPLICATION_JSON)
+                .extract().as(ProblemDetailResponseDTO.class);
+
+        Assertions.assertEquals("CONSTRAINT_VIOLATIONS", res.getErrorCode());
+
+    }
+
+    @Test
+    void resetPasswordTest_shouldReturnBadRequest_whenBadRequestResponse() {
+
+        UserResetPasswordRequest userResetPasswordRequest = new UserResetPasswordRequest();
+        userResetPasswordRequest.setPassword("new_password");
+
+        ProblemDetailResponse problemDetailResponse = new ProblemDetailResponse();
+        problemDetailResponse.setErrorCode("CONSTRAINT_VIOLATIONS");
+
+        //Mockserver
+        mockServerClient.when(request().withPath("/internal/users/password").withMethod(HttpMethod.PUT)
+                .withBody(JsonBody.json(userResetPasswordRequest)))
+                .withId(mockId)
+                .respond(httpRequest -> response().withStatusCode(Response.Status.BAD_REQUEST.getStatusCode())
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody(JsonBody.json(problemDetailResponse)));
+
+        UserResetPasswordRequestDTO userResetPasswordRequestDTO = new UserResetPasswordRequestDTO();
+        userResetPasswordRequestDTO.setPassword("new_password");
+
+        //Restassured
+        var res = given()
+                .when()
+                .auth().oauth2(keycloakClient.getAccessToken(ADMIN))
+                .header(APM_HEADER_PARAM, ADMIN)
+                .contentType(APPLICATION_JSON)
+                .body(userResetPasswordRequestDTO)
+                .put("/password")
+                .then()
+                .statusCode(BAD_REQUEST.getStatusCode());
+
+        Assertions.assertNotNull(res);
+    }
+
+    // test bob cannot reset password
 
     @Test
     void searchUsersByCriteriaTest() {
@@ -99,7 +179,7 @@ class UsersRestControllerTest extends AbstractTest {
                 .header(APM_HEADER_PARAM, ADMIN)
                 .contentType(APPLICATION_JSON)
                 .body(userSearchCriteriaDTO)
-                .post()
+                .post("/search")
                 .then()
                 .statusCode(OK.getStatusCode());
 
@@ -114,7 +194,7 @@ class UsersRestControllerTest extends AbstractTest {
                 .auth().oauth2(keycloakClient.getAccessToken(ADMIN))
                 .header(APM_HEADER_PARAM, ADMIN)
                 .contentType(APPLICATION_JSON)
-                .post()
+                .post("/search")
                 .then()
                 .statusCode(BAD_REQUEST.getStatusCode())
                 .contentType(APPLICATION_JSON)
@@ -153,7 +233,7 @@ class UsersRestControllerTest extends AbstractTest {
                 .header(APM_HEADER_PARAM, ADMIN)
                 .contentType(APPLICATION_JSON)
                 .body(userSearchCriteriaDTO)
-                .post()
+                .post("/search")
                 .then()
                 .statusCode(BAD_REQUEST.getStatusCode());
 

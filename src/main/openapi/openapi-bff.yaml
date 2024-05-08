@@ -38,6 +38,31 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ProblemDetailResponse'
+  /users/password:
+    put:
+      x-onecx:
+        permissions:
+          user:
+            - write
+      tags:
+        - UsersInternal
+      summary: Reset user password
+      operationId: resetPassword
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserResetPasswordRequest'
+      responses:
+        204:
+          description: Reset password succeeded
+        400:
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetailResponse'
   /roles/search:
     post:
       x-onecx:
@@ -136,6 +161,15 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ProblemDetailInvalidParam'
+    UserResetPasswordRequest:
+      type: object
+      required:
+        - password
+      properties:
+        password:
+          type: string
+          format: password
+          minLength: 1
     RoleSearchCriteria:
       type: object
       properties:
