@@ -15,6 +15,7 @@ import org.tkit.onecx.iam.bff.rs.mappers.UsersMapper;
 import gen.org.tkit.onecx.iam.bff.rs.internal.UsersInternalApiService;
 import gen.org.tkit.onecx.iam.bff.rs.internal.model.ProblemDetailResponseDTO;
 import gen.org.tkit.onecx.iam.bff.rs.internal.model.UserPageResultDTO;
+import gen.org.tkit.onecx.iam.bff.rs.internal.model.UserResetPasswordRequestDTO;
 import gen.org.tkit.onecx.iam.bff.rs.internal.model.UserSearchCriteriaDTO;
 import gen.org.tkit.onecx.iam.kc.client.api.UsersInternalApi;
 import gen.org.tkit.onecx.iam.kc.client.model.UserPageResult;
@@ -31,6 +32,14 @@ public class UsersRestController implements UsersInternalApiService {
 
     @Inject
     UsersMapper usersMapper;
+
+    @Override
+    public Response resetPassword(UserResetPasswordRequestDTO userResetPasswordRequestDTO) {
+
+        try (Response response = usersClient.resetPassword(usersMapper.map(userResetPasswordRequestDTO))) {
+            return Response.status(response.getStatus()).build();
+        }
+    }
 
     @Override
     public Response searchUsersByCriteria(UserSearchCriteriaDTO userSearchCriteriaDTO) {
