@@ -97,7 +97,13 @@ components:
     UserSearchCriteria:
       type: object
       properties:
-        query:
+        userName:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        email:
           type: string
         pageNumber:
           format: int32
