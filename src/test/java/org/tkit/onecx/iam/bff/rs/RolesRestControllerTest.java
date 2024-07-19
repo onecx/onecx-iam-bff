@@ -42,12 +42,12 @@ class RolesRestControllerTest extends AbstractTest {
 
     KeycloakTestClient keycloakClient = new KeycloakTestClient();
 
-    static final String mockId = "MOCK_ID";
+    static final String MOCK_ID = "MOCK_ID";
 
     @BeforeEach
     void resetExpectation() {
         try {
-            mockServerClient.clear(mockId);
+            mockServerClient.clear(MOCK_ID);
         } catch (Exception ex) {
             //  mockId not existing
         }
@@ -76,7 +76,7 @@ class RolesRestControllerTest extends AbstractTest {
         mockServerClient.when(request().withPath("/internal/roles/search")
                 .withMethod(HttpMethod.POST))
                 .withPriority(100)
-                .withId(mockId)
+                .withId(MOCK_ID)
                 .respond(httpRequest -> response().withStatusCode(Response.Status.OK.getStatusCode())
                         .withContentType(MediaType.APPLICATION_JSON)
                         .withBody(JsonBody.json(rolePageResult)));
@@ -139,7 +139,7 @@ class RolesRestControllerTest extends AbstractTest {
                 .withMethod(HttpMethod.POST)
                 .withBody(JsonBody.json(roleSearchCriteria)))
                 .withPriority(100)
-                .withId(mockId)
+                .withId(MOCK_ID)
                 .respond(httpRequest -> response().withStatusCode(BAD_REQUEST.getStatusCode())
                         .withContentType(MediaType.APPLICATION_JSON)
                         .withBody(JsonBody.json(problemDetailResponse)));
