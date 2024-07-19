@@ -40,13 +40,13 @@ class UsersRestControllerTest extends AbstractTest {
 
     KeycloakTestClient keycloakClient = new KeycloakTestClient();
 
-    static final String mockId = "MOCK_ID_USER";
+    static final String MOCK_ID = "MOCK_ID_USER";
 
     @BeforeEach
     void resetExpectation() {
 
         try {
-            mockServerClient.clear(mockId);
+            mockServerClient.clear(MOCK_ID);
         } catch (Exception ex) {
             //  mockId not existing
         }
@@ -58,7 +58,7 @@ class UsersRestControllerTest extends AbstractTest {
         mockServerClient.when(request().withPath("/internal/users/password")
                 .withMethod(HttpMethod.PUT))
                 .withPriority(100)
-                .withId(mockId)
+                .withId(MOCK_ID)
                 .respond(httpRequest -> response().withStatusCode((Response.Status.NO_CONTENT.getStatusCode()))
                         .withContentType(MediaType.APPLICATION_JSON));
 
@@ -108,7 +108,7 @@ class UsersRestControllerTest extends AbstractTest {
         //Mockserver
         mockServerClient.when(request().withPath("/internal/users/password").withMethod(HttpMethod.PUT)
                 .withBody(JsonBody.json(userResetPasswordRequest)))
-                .withId(mockId)
+                .withId(MOCK_ID)
                 .respond(httpRequest -> response().withStatusCode(Response.Status.BAD_REQUEST.getStatusCode())
                         .withContentType(MediaType.APPLICATION_JSON)
                         .withBody(JsonBody.json(problemDetailResponse)));
@@ -178,7 +178,7 @@ class UsersRestControllerTest extends AbstractTest {
         mockServerClient.when(request().withPath("/internal/users/search")
                 .withMethod(HttpMethod.POST))
                 .withPriority(100)
-                .withId(mockId)
+                .withId(MOCK_ID)
                 .respond(httpRequest -> response().withStatusCode(Response.Status.OK.getStatusCode())
                         .withContentType(MediaType.APPLICATION_JSON)
                         .withBody(JsonBody.json(userPageResult)));
@@ -232,7 +232,7 @@ class UsersRestControllerTest extends AbstractTest {
         //Mockserver
         mockServerClient.when(request().withPath("/internal/users/search").withMethod(HttpMethod.POST)
                 .withBody(JsonBody.json(userSearchCriteria)))
-                .withId(mockId)
+                .withId(MOCK_ID)
                 .respond(httpRequest -> response().withStatusCode(Response.Status.BAD_REQUEST.getStatusCode())
                         .withContentType(MediaType.APPLICATION_JSON)
                         .withBody(JsonBody.json(problemDetailResponse)));
