@@ -95,7 +95,7 @@ class RolesRestControllerTest extends AbstractTest {
                 .header(APM_HEADER_PARAM, ADMIN)
                 .contentType(APPLICATION_JSON)
                 .body(roleSearchCriteriaDTO)
-                .post()
+                .post("/search")
                 .then()
                 .statusCode(OK.getStatusCode());
 
@@ -115,7 +115,7 @@ class RolesRestControllerTest extends AbstractTest {
                 .auth().oauth2(keycloakClient.getAccessToken(ADMIN))
                 .header(APM_HEADER_PARAM, ADMIN)
                 .contentType(APPLICATION_JSON)
-                .post()
+                .post("/search")
                 .then()
                 .statusCode(BAD_REQUEST.getStatusCode())
                 .contentType(APPLICATION_JSON)
@@ -158,7 +158,7 @@ class RolesRestControllerTest extends AbstractTest {
                 .header(APM_HEADER_PARAM, ADMIN)
                 .contentType(APPLICATION_JSON)
                 .body(roleSearchCriteriaDTO)
-                .post()
+                .post("/search")
                 .then()
                 .statusCode(BAD_REQUEST.getStatusCode());
 
@@ -169,8 +169,9 @@ class RolesRestControllerTest extends AbstractTest {
         UserRolesResponseDTO rolesReponse = new UserRolesResponseDTO();
         rolesReponse.roles(List.of(new RoleDTO().name("role1")));
         // create mock rest endpoint
-        mockServerClient.when(request().withPath("/v1/user/roles/user1").withMethod(HttpMethod.GET))
-                .withId("MOCK_ID")
+        mockServerClient.when(request().withPath("/internal/roles/user1").withMethod(HttpMethod.GET))
+                .withId(MOCK_ID)
+                .withPriority(100)
                 .respond(httpRequest -> response().withStatusCode(Response.Status.OK.getStatusCode())
                         .withContentType(MediaType.APPLICATION_JSON)
                         .withBody(JsonBody.json(rolesReponse)));
@@ -181,7 +182,7 @@ class RolesRestControllerTest extends AbstractTest {
                 .header(APM_HEADER_PARAM, ADMIN)
                 .contentType(APPLICATION_JSON)
                 .pathParam("userId", "user1")
-                .get("/{userId")
+                .get("/{userId}")
                 .then()
                 .statusCode(OK.getStatusCode()).extract().as(UserRolesResponseDTO.class);
         Assertions.assertEquals("role1", result.getRoles().get(0).getName());

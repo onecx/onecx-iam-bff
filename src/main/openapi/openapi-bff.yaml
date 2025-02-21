@@ -94,8 +94,10 @@ paths:
                 $ref: '#/components/schemas/ProblemDetailResponse'
   /roles/{userId}:
     get:
-      security:
-        - oauth2: [ ocx-ia:all, ocx-ia:read ]
+      x-onecx:
+        permissions:
+          role:
+            - read
       tags:
         - RolesInternal
       summary: Get roles of user by id
