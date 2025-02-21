@@ -18,6 +18,7 @@ import gen.org.tkit.onecx.iam.bff.rs.internal.model.RolePageResultDTO;
 import gen.org.tkit.onecx.iam.bff.rs.internal.model.RoleSearchCriteriaDTO;
 import gen.org.tkit.onecx.iam.kc.client.api.RolesInternalApi;
 import gen.org.tkit.onecx.iam.kc.client.model.RolePageResult;
+import gen.org.tkit.onecx.iam.kc.client.model.UserRolesResponse;
 
 @ApplicationScoped
 public class RolesRestController implements RolesInternalApiService {
@@ -30,6 +31,14 @@ public class RolesRestController implements RolesInternalApiService {
     RolesMapper rolesMapper;
     @Inject
     ExceptionMapper exceptionMapper;
+
+    @Override
+    public Response getUserRoles(String userId) {
+        try (Response response = rolesClient.getUserRoles(userId)) {
+            return Response.status(response.getStatus())
+                    .entity(rolesMapper.mapUserRoles(response.readEntity(UserRolesResponse.class))).build();
+        }
+    }
 
     @Override
     public Response searchRolesByCriteria(RoleSearchCriteriaDTO roleSearchCriteriaDTO) {

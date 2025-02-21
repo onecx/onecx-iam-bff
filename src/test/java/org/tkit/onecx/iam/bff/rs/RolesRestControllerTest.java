@@ -22,7 +22,9 @@ import org.tkit.onecx.iam.bff.rs.controllers.RolesRestController;
 import org.tkit.quarkus.log.cdi.LogService;
 
 import gen.org.tkit.onecx.iam.bff.rs.internal.model.ProblemDetailResponseDTO;
+import gen.org.tkit.onecx.iam.bff.rs.internal.model.RoleDTO;
 import gen.org.tkit.onecx.iam.bff.rs.internal.model.RoleSearchCriteriaDTO;
+import gen.org.tkit.onecx.iam.bff.rs.internal.model.UserRolesResponseDTO;
 import gen.org.tkit.onecx.iam.kc.client.model.ProblemDetailResponse;
 import gen.org.tkit.onecx.iam.kc.client.model.Role;
 import gen.org.tkit.onecx.iam.kc.client.model.RolePageResult;
@@ -93,7 +95,7 @@ class RolesRestControllerTest extends AbstractTest {
                 .header(APM_HEADER_PARAM, ADMIN)
                 .contentType(APPLICATION_JSON)
                 .body(roleSearchCriteriaDTO)
-                .post()
+                .post("/search")
                 .then()
                 .statusCode(OK.getStatusCode());
 
@@ -113,7 +115,7 @@ class RolesRestControllerTest extends AbstractTest {
                 .auth().oauth2(keycloakClient.getAccessToken(ADMIN))
                 .header(APM_HEADER_PARAM, ADMIN)
                 .contentType(APPLICATION_JSON)
-                .post()
+                .post("/search")
                 .then()
                 .statusCode(BAD_REQUEST.getStatusCode())
                 .contentType(APPLICATION_JSON)
@@ -156,10 +158,34 @@ class RolesRestControllerTest extends AbstractTest {
                 .header(APM_HEADER_PARAM, ADMIN)
                 .contentType(APPLICATION_JSON)
                 .body(roleSearchCriteriaDTO)
-                .post()
+                .post("/search")
                 .then()
                 .statusCode(BAD_REQUEST.getStatusCode());
 
+    }
+
+    @Test
+    void getUserRolesByUserId() {
+        UserRolesResponseDTO rolesReponse = new UserRolesResponseDTO();
+        rolesReponse.roles(List.of(new RoleDTO().name("role1")));
+        // create mock rest endpoint
+        mockServerClient.when(request().withPath("/internal/roles/user1").withMethod(HttpMethod.GET))
+                .withId(MOCK_ID)
+                .withPriority(100)
+                .respond(httpRequest -> response().withStatusCode(Response.Status.OK.getStatusCode())
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody(JsonBody.json(rolesReponse)));
+
+        var result = given()
+                .when()
+                .auth().oauth2(keycloakClient.getAccessToken(ADMIN))
+                .header(APM_HEADER_PARAM, ADMIN)
+                .contentType(APPLICATION_JSON)
+                .pathParam("userId", "user1")
+                .get("/{userId}")
+                .then()
+                .statusCode(OK.getStatusCode()).extract().as(UserRolesResponseDTO.class);
+        Assertions.assertEquals("role1", result.getRoles().get(0).getName());
     }
 
 }
