@@ -92,8 +92,43 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ProblemDetailResponse'
+  /roles/{userId}:
+    get:
+      security:
+        - oauth2: [ ocx-ia:all, ocx-ia:read ]
+      tags:
+        - RolesInternal
+      summary: Get roles of user by id
+      operationId: getUserRoles
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: Keycloak userId
+          schema:
+            type: string
+      responses:
+        200:
+          description: OK
+          content:
+            "application/json":
+              schema:
+                $ref: '#/components/schemas/UserRolesResponse'
+        400:
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetailResponse'
 components:
   schemas:
+    UserRolesResponse:
+      type: object
+      properties:
+        roles:
+          type: array
+          items:
+            $ref: '#/components/schemas/Role'
     UserSearchCriteria:
       type: object
       properties:
