@@ -3,9 +3,11 @@ package org.tkit.onecx.iam.bff.rs.mappers;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
+import gen.org.tkit.onecx.iam.bff.rs.internal.model.UserDTO;
 import gen.org.tkit.onecx.iam.bff.rs.internal.model.UserPageResultDTO;
 import gen.org.tkit.onecx.iam.bff.rs.internal.model.UserResetPasswordRequestDTO;
 import gen.org.tkit.onecx.iam.bff.rs.internal.model.UserSearchCriteriaDTO;
+import gen.org.tkit.onecx.iam.kc.client.model.User;
 import gen.org.tkit.onecx.iam.kc.client.model.UserPageResult;
 import gen.org.tkit.onecx.iam.kc.client.model.UserResetPasswordRequest;
 import gen.org.tkit.onecx.iam.kc.client.model.UserSearchCriteria;
@@ -19,4 +21,7 @@ public interface UsersMapper {
 
     @Mapping(target = "removeStreamItem", ignore = true)
     UserPageResultDTO map(UserPageResult pageResult);
+
+    @Mapping(target = "removeAttributesItem", ignore = true)
+    UserDTO map(User user);
 }
