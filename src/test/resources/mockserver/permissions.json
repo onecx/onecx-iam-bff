@@ -25,6 +25,9 @@
               "write",
               "delete"
             ],
+            "realm": [
+              "read"
+            ],
             "permissions": [
               "admin-write",
               "admin-read"
@@ -53,6 +56,9 @@
           "permissions": {
             "user": ["read"],
             "role": ["read"],
+            "realm": [
+              "read"
+            ],
             "permissions": [
               "admin-write",
               "admin-read"

@@ -122,8 +122,38 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ProblemDetailResponse'
+  /realms:
+    get:
+      x-onecx:
+        permissions:
+          realm:
+            - read
+      tags:
+        - RealmsInternal
+      summary: Get all realms
+      operationId: getAllRealms
+      responses:
+        200:
+          description: OK
+          content:
+            "application/json":
+              schema:
+                $ref: '#/components/schemas/RealmResponse'
+        400:
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetailResponse'
 components:
   schemas:
+    RealmResponse:
+      type: object
+      properties:
+        realms:
+          type: array
+          items:
+            type: string
     UserRolesResponse:
       type: object
       properties:
@@ -139,6 +169,10 @@ components:
         firstName:
           type: string
         lastName:
+          type: string
+        userId:
+          type: string
+        realm:
           type: string
         email:
           type: string
@@ -189,6 +223,8 @@ components:
         lastName:
           type: string
         email:
+          type: string
+        realm:
           type: string
         attributes:
           type: object
