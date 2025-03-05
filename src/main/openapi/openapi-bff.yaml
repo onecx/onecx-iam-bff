@@ -190,6 +190,12 @@ components:
           type: string
         email:
           type: string
+        attributes:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              type: string
     ProblemDetailResponse:
       type: object
       properties:
