@@ -13,6 +13,8 @@ app:
             write: permission on PUT, POST, PATCH requests, where objects are saved or updated
           role:
             read: permission on all GET requests and POST search
+          realm:
+            read: permission on all GET requests and POST search
     keycloak:
       client:
         enabled: true
