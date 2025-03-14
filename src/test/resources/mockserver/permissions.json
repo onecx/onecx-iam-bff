@@ -17,16 +17,11 @@
           "permissions": {
             "user": [
               "read",
-              "write",
-              "delete"
+              "write"
             ],
-            "role": [
+            "admin": [
               "read",
-              "write",
-              "delete"
-            ],
-            "realm": [
-              "read"
+              "write"
             ],
             "permissions": [
               "admin-write",
@@ -55,10 +50,6 @@
           "appId": "onecx-iam-bff",
           "permissions": {
             "user": ["read"],
-            "role": ["read"],
-            "realm": [
-              "read"
-            ],
             "permissions": [
               "admin-write",
               "admin-read"

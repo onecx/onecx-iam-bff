@@ -9,16 +9,29 @@ tags:
   - name: UsersInternal
     description: Keycloak user internal service
 paths:
-  /users/search:
+  /admin/{provider}/{realm}/users/search:
     post:
       x-onecx:
         permissions:
-          user:
+          admin:
             - read
       tags:
-        - UsersInternal
+        - AdminInternal
       summary: Search users by criteria
       operationId: searchUsersByCriteria
+      parameters:
+        - name: provider
+          in: path
+          required: true
+          description: provider
+          schema:
+            type: string
+        - name: realm
+          in: path
+          required: true
+          description: realm
+          schema:
+            type: string
       requestBody:
         required: true
         content:
@@ -38,71 +51,29 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ProblemDetailResponse'
-  /users/password:
-    put:
-      x-onecx:
-        permissions:
-          user:
-            - write
-      tags:
-        - UsersInternal
-      summary: Reset user password
-      operationId: resetPassword
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/UserResetPasswordRequest'
-      responses:
-        204:
-          description: Reset password succeeded
-        400:
-          description: Bad request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetailResponse'
-  /roles/search:
-    post:
-      x-onecx:
-        permissions:
-          role:
-            - read
-      tags:
-        - RolesInternal
-      summary: Search roles by criteria
-      operationId: searchRolesByCriteria
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/RoleSearchCriteria'
-      responses:
-        200:
-          description: OK
-          content:
-            "application/json":
-              schema:
-                $ref: "#/components/schemas/RolePageResult"
-        400:
-          description: Bad request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetailResponse'
-  /roles/{userId}:
+  /admin/{provider}/{realm}/roles/{userId}:
     get:
       x-onecx:
         permissions:
-          role:
+          admin:
             - read
       tags:
-        - RolesInternal
+        - AdminInternal
       summary: Get roles of user by id
       operationId: getUserRoles
       parameters:
+        - name: provider
+          in: path
+          required: true
+          description: provider
+          schema:
+            type: string
+        - name: realm
+          in: path
+          required: true
+          description: realm
+          schema:
+            type: string
         - name: userId
           in: path
           required: true
@@ -122,23 +93,113 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ProblemDetailResponse'
-  /realms:
-    get:
+  /admin/{provider}/{realm}/roles/search:
+    post:
       x-onecx:
         permissions:
-          realm:
+          admin:
             - read
       tags:
-        - RealmsInternal
-      summary: Get all realms
-      operationId: getAllRealms
+        - AdminInternal
+      summary: Search roles by criteria
+      operationId: searchRolesByCriteria
+      parameters:
+        - name: provider
+          in: path
+          required: true
+          description: provider
+          schema:
+            type: string
+        - name: realm
+          in: path
+          required: true
+          description: realm
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RoleSearchCriteria'
       responses:
         200:
           description: OK
           content:
             "application/json":
               schema:
-                $ref: '#/components/schemas/RealmResponse'
+                $ref: "#/components/schemas/RolePageResult"
+        400:
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetailResponse'
+  /admin/providers:
+    get:
+      x-onecx:
+        permissions:
+          admin:
+            - read
+      tags:
+        - AdminInternal
+      summary: Get all providers
+      operationId: getAllProviders
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProvidersResponse'
+        400:
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetailResponse'
+  /me/password:
+    put:
+      x-onecx:
+        permissions:
+          user:
+            - write
+      tags:
+        - UserInternal
+      summary: Reset user password
+      operationId: resetPassword
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserResetPasswordRequest'
+      responses:
+        204:
+          description: Reset password succeeded
+        400:
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetailResponse'
+  /me/provider:
+    get:
+      x-onecx:
+        permissions:
+          user:
+            - read
+      tags:
+        - UserInternal
+      summary: Get user provider
+      operationId: getUserProvider
+      responses:
+        200:
+          description: OK
+          content:
+            "application/json":
+              schema:
+                $ref: '#/components/schemas/ProvidersResponse'
         400:
           description: Bad request
           content:
@@ -146,10 +207,31 @@ paths:
               schema:
                 $ref: '#/components/schemas/ProblemDetailResponse'
 components:
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: https://oauth.simple.api/token
+          scopes:
+            ocx-ia:all: Grants access to all operations
+            ocx-ia:read: Grants read access
+            ocx-ia:write: Grants write access
   schemas:
-    RealmResponse:
+    ProvidersResponse:
       type: object
       properties:
+        providers:
+          type: array
+          items:
+            $ref: '#/components/schemas/Provider'
+    Provider:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
         realms:
           type: array
           items:
@@ -171,8 +253,6 @@ components:
         lastName:
           type: string
         userId:
-          type: string
-        realm:
           type: string
         email:
           type: string
@@ -214,6 +294,8 @@ components:
           type: string
         origin:
           type: string
+        realm:
+          type: string
         createdTimestamp:
           $ref: '#/components/schemas/OffsetDateTime'
         username:
@@ -224,14 +306,21 @@ components:
           type: string
         email:
           type: string
-        realm:
-          type: string
         attributes:
           type: object
           additionalProperties:
             type: array
             items:
               type: string
+    UserResetPasswordRequest:
+      type: object
+      required:
+        - password
+      properties:
+        password:
+          type: string
+          format: password
+          minLength: 1
     ProblemDetailResponse:
       type: object
       properties:
@@ -247,15 +336,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ProblemDetailInvalidParam'
-    UserResetPasswordRequest:
-      type: object
-      required:
-        - password
-      properties:
-        password:
-          type: string
-          format: password
-          minLength: 1
     RoleSearchCriteria:
       type: object
       properties:
