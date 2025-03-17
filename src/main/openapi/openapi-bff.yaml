@@ -232,6 +232,8 @@ components:
           type: string
         description:
           type: string
+        fromToken:
+          type: boolean
         realms:
           type: array
           items:
