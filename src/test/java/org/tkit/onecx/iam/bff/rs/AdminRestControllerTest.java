@@ -78,7 +78,8 @@ public class AdminRestControllerTest extends AbstractTest {
         userPageResult.setStream(userList);
 
         //Mockserver
-        mockServerClient.when(request().withPath("/internal/admin/kc/realm/users/search")
+        mockServerClient.when(request().withPath("/internal/admin/users/search")
+                .withBody(JsonBody.json(new UserSearchCriteria().issuer("testIssuer").pageSize(25).pageNumber(1)))
                 .withMethod(HttpMethod.POST))
                 .withPriority(100)
                 .withId(MOCK_ID)
@@ -87,7 +88,8 @@ public class AdminRestControllerTest extends AbstractTest {
                         .withBody(JsonBody.json(userPageResult)));
 
         UserSearchCriteriaDTO userSearchCriteriaDTO = new UserSearchCriteriaDTO();
-        userSearchCriteriaDTO.setPageNumber(3);
+        userSearchCriteriaDTO.setIssuer("testIssuer");
+        userSearchCriteriaDTO.setPageNumber(1);
         userSearchCriteriaDTO.setPageSize(25);
 
         //Restassured
@@ -97,9 +99,7 @@ public class AdminRestControllerTest extends AbstractTest {
                 .header(APM_HEADER_PARAM, ADMIN)
                 .contentType(APPLICATION_JSON)
                 .body(userSearchCriteriaDTO)
-                .pathParam("provider", "kc")
-                .pathParam("realm", "realm")
-                .post("/{provider}/{realm}/users/search")
+                .post("/users/search")
                 .then()
                 .statusCode(OK.getStatusCode());
 
@@ -114,9 +114,7 @@ public class AdminRestControllerTest extends AbstractTest {
                 .auth().oauth2(keycloakClient.getAccessToken(ADMIN))
                 .header(APM_HEADER_PARAM, ADMIN)
                 .contentType(APPLICATION_JSON)
-                .pathParam("provider", "kc")
-                .pathParam("realm", "realm")
-                .post("/{provider}/{realm}/users/search")
+                .post("/users/search")
                 .then()
                 .statusCode(BAD_REQUEST.getStatusCode())
                 .contentType(APPLICATION_JSON)
@@ -130,14 +128,14 @@ public class AdminRestControllerTest extends AbstractTest {
     void searchUsersByCriteriaTest_shouldReturnBadRequest_whenBadRequestResponse() {
 
         UserSearchCriteria userSearchCriteria = new UserSearchCriteria();
-        userSearchCriteria.setPageNumber(3);
-        userSearchCriteria.setPageSize(25);
-
+        userSearchCriteria.setIssuer("testIssuer");
+        userSearchCriteria.setPageNumber(1);
+        userSearchCriteria.setPageSize(1);
         ProblemDetailResponse problemDetailResponse = new ProblemDetailResponse();
         problemDetailResponse.setErrorCode("CONSTRAINT_VIOLATIONS");
 
         //Mockserver
-        mockServerClient.when(request().withPath("/internal/admin/kc/realm/users/search").withMethod(HttpMethod.POST)
+        mockServerClient.when(request().withPath("/internal/admin/users/search").withMethod(HttpMethod.POST)
                 .withBody(JsonBody.json(userSearchCriteria)))
                 .withId(MOCK_ID)
                 .respond(httpRequest -> response().withStatusCode(Response.Status.BAD_REQUEST.getStatusCode())
@@ -145,8 +143,9 @@ public class AdminRestControllerTest extends AbstractTest {
                         .withBody(JsonBody.json(problemDetailResponse)));
 
         UserSearchCriteriaDTO userSearchCriteriaDTO = new UserSearchCriteriaDTO();
-        userSearchCriteriaDTO.setPageNumber(3);
-        userSearchCriteriaDTO.setPageSize(25);
+        userSearchCriteriaDTO.setPageNumber(1);
+        userSearchCriteriaDTO.setPageSize(1);
+        userSearchCriteriaDTO.setIssuer("testIssuer");
 
         //Restassured
         var res = given()
@@ -154,9 +153,8 @@ public class AdminRestControllerTest extends AbstractTest {
                 .auth().oauth2(keycloakClient.getAccessToken(ADMIN))
                 .header(APM_HEADER_PARAM, ADMIN)
                 .contentType(APPLICATION_JSON)
-                .pathParam("provider", "kc")
-                .pathParam("realm", "realm")
-                .post("/{provider}/{realm}/users/search")
+                .body(userSearchCriteriaDTO)
+                .post("/users/search")
                 .then()
                 .statusCode(BAD_REQUEST.getStatusCode());
 
@@ -183,7 +181,8 @@ public class AdminRestControllerTest extends AbstractTest {
         rolePageResult.setStream(rolesList);
 
         //Mockserver
-        mockServerClient.when(request().withPath("/internal/admin/kc/realm/roles/search")
+        mockServerClient.when(request().withPath("/internal/admin/roles/search")
+                .withBody(JsonBody.json(new RoleSearchCriteria().issuer("testIssuer").name("rolesSearchTest1")))
                 .withMethod(HttpMethod.POST))
                 .withPriority(100)
                 .withId(MOCK_ID)
@@ -193,8 +192,7 @@ public class AdminRestControllerTest extends AbstractTest {
 
         RoleSearchCriteriaDTO roleSearchCriteriaDTO = new RoleSearchCriteriaDTO();
         roleSearchCriteriaDTO.setName("rolesSearchTest1");
-        roleSearchCriteriaDTO.setPageNumber(3);
-        roleSearchCriteriaDTO.setPageSize(25);
+        roleSearchCriteriaDTO.setIssuer("testIssuer");
 
         //Restassured
         given()
@@ -203,9 +201,7 @@ public class AdminRestControllerTest extends AbstractTest {
                 .header(APM_HEADER_PARAM, ADMIN)
                 .contentType(APPLICATION_JSON)
                 .body(roleSearchCriteriaDTO)
-                .pathParam("provider", "kc")
-                .pathParam("realm", "realm")
-                .post("/{provider}/{realm}/roles/search")
+                .post("/roles/search")
                 .then()
                 .statusCode(OK.getStatusCode());
 
@@ -216,7 +212,8 @@ public class AdminRestControllerTest extends AbstractTest {
         UserRolesResponseDTO rolesReponse = new UserRolesResponseDTO();
         rolesReponse.roles(List.of(new RoleDTO().name("role1")));
         // create mock rest endpoint
-        mockServerClient.when(request().withPath("/internal/admin/kc/realm/roles/user1").withMethod(HttpMethod.GET))
+        mockServerClient.when(request().withPath("/internal/admin/user1/roles").withMethod(HttpMethod.POST)
+                .withBody(JsonBody.json(new UserRolesSearchRequest().issuer("testIssuer"))))
                 .withId(MOCK_ID)
                 .withPriority(100)
                 .respond(httpRequest -> response().withStatusCode(Response.Status.OK.getStatusCode())
@@ -228,10 +225,9 @@ public class AdminRestControllerTest extends AbstractTest {
                 .auth().oauth2(keycloakClient.getAccessToken(ADMIN))
                 .header(APM_HEADER_PARAM, ADMIN)
                 .contentType(APPLICATION_JSON)
-                .pathParam("provider", "kc")
-                .pathParam("realm", "realm")
                 .pathParam("userId", "user1")
-                .get("/{provider}/{realm}/roles/{userId}")
+                .body(new SearchUserRolesRequestDTO().issuer("testIssuer"))
+                .post("/{userId}/roles")
                 .then()
                 .statusCode(OK.getStatusCode()).extract().as(UserRolesResponseDTO.class);
         Assertions.assertEquals("role1", result.getRoles().get(0).getName());
@@ -240,7 +236,7 @@ public class AdminRestControllerTest extends AbstractTest {
     @Test
     void getAllProvidersAndRealms() {
         ProvidersResponse providersResponse = new ProvidersResponse();
-        providersResponse.setProviders(List.of(new Provider().name("kc1").realms(List.of("realm1"))));
+        providersResponse.setProviders(List.of(new Provider().name("kc1").domains(List.of(new Domain().name("realm1")))));
         // create mock rest endpoint
         mockServerClient.when(request().withPath("/internal/admin/providers").withMethod(HttpMethod.GET))
                 .withId(MOCK_ID)
@@ -258,7 +254,7 @@ public class AdminRestControllerTest extends AbstractTest {
                 .then()
                 .statusCode(OK.getStatusCode()).extract().as(ProvidersResponseDTO.class);
         Assertions.assertEquals("kc1", result.getProviders().get(0).getName());
-        Assertions.assertEquals("realm1", result.getProviders().get(0).getRealms().get(0));
+        Assertions.assertEquals("realm1", result.getProviders().get(0).getDomains().get(0).getName());
     }
 
     @Test

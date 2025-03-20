@@ -9,7 +9,7 @@ tags:
   - name: UsersInternal
     description: Keycloak user internal service
 paths:
-  /admin/{provider}/{realm}/users/search:
+  /admin/users/search:
     post:
       x-onecx:
         permissions:
@@ -19,19 +19,6 @@ paths:
         - AdminInternal
       summary: Search users by criteria
       operationId: searchUsersByCriteria
-      parameters:
-        - name: provider
-          in: path
-          required: true
-          description: provider
-          schema:
-            type: string
-        - name: realm
-          in: path
-          required: true
-          description: realm
-          schema:
-            type: string
       requestBody:
         required: true
         content:
@@ -51,8 +38,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ProblemDetailResponse'
-  /admin/{provider}/{realm}/roles/{userId}:
-    get:
+  /admin/{userId}/roles:
+    post:
       x-onecx:
         permissions:
           admin:
@@ -62,24 +49,17 @@ paths:
       summary: Get roles of user by id
       operationId: getUserRoles
       parameters:
-        - name: provider
-          in: path
-          required: true
-          description: provider
-          schema:
-            type: string
-        - name: realm
-          in: path
-          required: true
-          description: realm
-          schema:
-            type: string
         - name: userId
           in: path
           required: true
           description: Keycloak userId
           schema:
             type: string
+      requestBody:
+        content:
+          "application/json":
+            schema:
+              $ref: '#/components/schemas/SearchUserRolesRequest'
       responses:
         200:
           description: OK
@@ -93,7 +73,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ProblemDetailResponse'
-  /admin/{provider}/{realm}/roles/search:
+  /admin/roles/search:
     post:
       x-onecx:
         permissions:
@@ -103,19 +83,6 @@ paths:
         - AdminInternal
       summary: Search roles by criteria
       operationId: searchRolesByCriteria
-      parameters:
-        - name: provider
-          in: path
-          required: true
-          description: provider
-          schema:
-            type: string
-        - name: realm
-          in: path
-          required: true
-          description: realm
-          schema:
-            type: string
       requestBody:
         required: true
         content:
@@ -218,6 +185,13 @@ components:
             ocx-ia:read: Grants read access
             ocx-ia:write: Grants write access
   schemas:
+    SearchUserRolesRequest:
+      type: object
+      required:
+        - issuer
+      properties:
+        issuer:
+          type: string
     ProvidersResponse:
       type: object
       properties:
@@ -234,10 +208,19 @@ components:
           type: string
         fromToken:
           type: boolean
-        realms:
+        domains:
           type: array
           items:
-            type: string
+            $ref: '#/components/schemas/Domain'
+    Domain:
+      type: object
+      properties:
+        name:
+          type: string
+        displayName:
+          type: string
+        issuer:
+          type: string
     UserRolesResponse:
       type: object
       properties:
@@ -257,6 +240,8 @@ components:
         userId:
           type: string
         email:
+          type: string
+        issuer:
           type: string
         pageNumber:
           format: int32
@@ -296,7 +281,7 @@ components:
           type: string
         origin:
           type: string
-        realm:
+        domain:
           type: string
         createdTimestamp:
           $ref: '#/components/schemas/OffsetDateTime'
@@ -340,8 +325,12 @@ components:
             $ref: '#/components/schemas/ProblemDetailInvalidParam'
     RoleSearchCriteria:
       type: object
+      required:
+        - issuer
       properties:
         name:
+          type: string
+        issuer:
           type: string
         pageNumber:
           format: int32

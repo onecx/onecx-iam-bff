@@ -42,24 +42,24 @@ public class AdminRestController implements AdminInternalApiService {
     }
 
     @Override
-    public Response getUserRoles(String provider, String realm, String userId) {
-        try (Response response = adminClient.getUserRoles(provider, realm, userId)) {
+    public Response getUserRoles(String userId, SearchUserRolesRequestDTO searchUserRequestDTO) {
+        try (Response response = adminClient.getUserRoles(userId, adminMapper.map(searchUserRequestDTO))) {
             return Response.status(response.getStatus())
                     .entity(adminMapper.mapUserRoles(response.readEntity(UserRolesResponse.class))).build();
         }
     }
 
     @Override
-    public Response searchRolesByCriteria(String provider, String realm, RoleSearchCriteriaDTO roleSearchCriteriaDTO) {
-        try (Response response = adminClient.searchRolesByCriteria(provider, realm, adminMapper.map(roleSearchCriteriaDTO))) {
+    public Response searchRolesByCriteria(RoleSearchCriteriaDTO roleSearchCriteriaDTO) {
+        try (Response response = adminClient.searchRolesByCriteria(adminMapper.map(roleSearchCriteriaDTO))) {
             RolePageResultDTO rolePageResult = adminMapper.map(response.readEntity(RolePageResult.class));
             return Response.status(response.getStatus()).entity(rolePageResult).build();
         }
     }
 
     @Override
-    public Response searchUsersByCriteria(String provider, String realm, UserSearchCriteriaDTO userSearchCriteriaDTO) {
-        try (Response response = adminClient.searchUsersByCriteria(provider, realm, adminMapper.map(userSearchCriteriaDTO))) {
+    public Response searchUsersByCriteria(UserSearchCriteriaDTO userSearchCriteriaDTO) {
+        try (Response response = adminClient.searchUsersByCriteria(adminMapper.map(userSearchCriteriaDTO))) {
             UserPageResultDTO userPageResult = adminMapper.map(response.readEntity(UserPageResult.class));
             return Response.status(response.getStatus()).entity(userPageResult).build();
         }

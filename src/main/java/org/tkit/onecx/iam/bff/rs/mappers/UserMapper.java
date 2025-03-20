@@ -15,7 +15,7 @@ public interface UserMapper {
 
     UserResetPasswordRequest map(UserResetPasswordRequestDTO resetPasswordRequestDTO);
 
-    @Mapping(target = "removeRealmsItem", ignore = true)
+    @Mapping(target = "removeDomainsItem", ignore = true)
     ProviderDTO map(Provider provider);
 
     @Mapping(target = "removeProvidersItem", ignore = true)

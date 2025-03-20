@@ -23,10 +23,7 @@ import org.tkit.quarkus.log.cdi.LogService;
 import gen.org.tkit.onecx.iam.bff.rs.internal.model.ProblemDetailResponseDTO;
 import gen.org.tkit.onecx.iam.bff.rs.internal.model.ProvidersResponseDTO;
 import gen.org.tkit.onecx.iam.bff.rs.internal.model.UserResetPasswordRequestDTO;
-import gen.org.tkit.onecx.iam.kc.client.model.ProblemDetailResponse;
-import gen.org.tkit.onecx.iam.kc.client.model.Provider;
-import gen.org.tkit.onecx.iam.kc.client.model.ProvidersResponse;
-import gen.org.tkit.onecx.iam.kc.client.model.UserResetPasswordRequest;
+import gen.org.tkit.onecx.iam.kc.client.model.*;
 import io.quarkiverse.mockserver.test.InjectMockServerClient;
 import io.quarkus.test.common.http.TestHTTPEndpoint;
 import io.quarkus.test.junit.QuarkusTest;
@@ -151,7 +148,7 @@ public class UserRestControllerTest extends AbstractTest {
     @Test
     void getUserProviderAndRealm() {
         ProvidersResponse providersResponse = new ProvidersResponse();
-        providersResponse.setProviders(List.of(new Provider().name("kc1").realms(List.of("realm1"))));
+        providersResponse.setProviders(List.of(new Provider().name("kc1").domains(List.of(new Domain().name("realm1")))));
         // create mock rest endpoint
         mockServerClient.when(request().withPath("/internal/me/provider").withMethod(HttpMethod.GET))
                 .withId(MOCK_ID)
@@ -169,6 +166,6 @@ public class UserRestControllerTest extends AbstractTest {
                 .then()
                 .statusCode(OK.getStatusCode()).extract().as(ProvidersResponseDTO.class);
         Assertions.assertEquals("kc1", result.getProviders().get(0).getName());
-        Assertions.assertEquals("realm1", result.getProviders().get(0).getRealms().get(0));
+        Assertions.assertEquals("realm1", result.getProviders().get(0).getDomains().get(0).getName());
     }
 }

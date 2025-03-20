@@ -11,7 +11,7 @@ public interface AdminMapper {
     @Mapping(target = "removeProvidersItem", ignore = true)
     ProvidersResponseDTO map(ProvidersResponse providersResponse);
 
-    @Mapping(target = "removeRealmsItem", ignore = true)
+    @Mapping(target = "removeDomainsItem", ignore = true)
     ProviderDTO map(Provider provider);
 
     @Mapping(target = "removeRolesItem", ignore = true)
@@ -30,4 +30,5 @@ public interface AdminMapper {
 
     UserSearchCriteria map(UserSearchCriteriaDTO criteria);
 
+    UserRolesSearchRequest map(SearchUserRolesRequestDTO searchUserRequestDTO);
 }
