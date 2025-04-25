@@ -40,11 +40,15 @@ public class AdminRestControllerTest extends AbstractTest {
     KeycloakTestClient keycloakClient = new KeycloakTestClient();
 
     static final String MOCK_ID = "MOCK_ID";
+    static final String MOCK_KEYCLOAK_CLIENT = "MOCK_KC";
+    static final String MOCK_AWS_CLIENT = "MOCK_AWS";
 
     @BeforeEach
     void resetExpectation() {
         try {
             mockServerClient.clear(MOCK_ID);
+            mockServerClient.clear(MOCK_KEYCLOAK_CLIENT);
+            mockServerClient.clear(MOCK_AWS_CLIENT);
         } catch (Exception ex) {
             //  mockId not existing
         }
@@ -76,9 +80,26 @@ public class AdminRestControllerTest extends AbstractTest {
         userPageResult.setTotalPages(5L);
         userPageResult.setTotalElements(200L);
         userPageResult.setStream(userList);
+        ValidateIssuerRequest request = new ValidateIssuerRequest();
+        request.setIssuer("testIssuer");
+        //Mock clients
+        mockServerClient.when(request().withPath("/keycloak/internal/admin/validate")
+                .withBody(JsonBody.json(request))
+                .withMethod(HttpMethod.POST))
+                .withPriority(100)
+                .withId(MOCK_KEYCLOAK_CLIENT)
+                .respond(httpRequest -> response().withStatusCode(Response.Status.OK.getStatusCode()));
+
+        //Mock clients
+        mockServerClient.when(request().withPath("/aws/internal/admin/validate")
+                .withBody(JsonBody.json(request))
+                .withMethod(HttpMethod.POST))
+                .withPriority(100)
+                .withId(MOCK_AWS_CLIENT)
+                .respond(httpRequest -> response().withStatusCode(Response.Status.NOT_FOUND.getStatusCode()));
 
         //Mockserver
-        mockServerClient.when(request().withPath("/internal/admin/users/search")
+        mockServerClient.when(request().withPath("/keycloak/internal/admin/users/search")
                 .withBody(JsonBody.json(new UserSearchCriteria().issuer("testIssuer").pageSize(25).pageNumber(1)))
                 .withMethod(HttpMethod.POST))
                 .withPriority(100)
@@ -96,7 +117,7 @@ public class AdminRestControllerTest extends AbstractTest {
         given()
                 .when()
                 .auth().oauth2(keycloakClient.getAccessToken(ADMIN))
-                .header(APM_HEADER_PARAM, ADMIN)
+                .header(APM_HEADER_PARAM, keycloakClient.getAccessToken(ADMIN))
                 .contentType(APPLICATION_JSON)
                 .body(userSearchCriteriaDTO)
                 .post("/users/search")
@@ -112,7 +133,7 @@ public class AdminRestControllerTest extends AbstractTest {
         var res = given()
                 .when()
                 .auth().oauth2(keycloakClient.getAccessToken(ADMIN))
-                .header(APM_HEADER_PARAM, ADMIN)
+                .header(APM_HEADER_PARAM, keycloakClient.getAccessToken(ADMIN))
                 .contentType(APPLICATION_JSON)
                 .post("/users/search")
                 .then()
@@ -134,8 +155,26 @@ public class AdminRestControllerTest extends AbstractTest {
         ProblemDetailResponse problemDetailResponse = new ProblemDetailResponse();
         problemDetailResponse.setErrorCode("CONSTRAINT_VIOLATIONS");
 
+        ValidateIssuerRequest request = new ValidateIssuerRequest();
+        request.setIssuer("testIssuer");
+        //Mock clients
+        mockServerClient.when(request().withPath("/keycloak/internal/admin/validate")
+                .withBody(JsonBody.json(request))
+                .withMethod(HttpMethod.POST))
+                .withPriority(100)
+                .withId(MOCK_KEYCLOAK_CLIENT)
+                .respond(httpRequest -> response().withStatusCode(Response.Status.OK.getStatusCode()));
+
+        //Mock clients
+        mockServerClient.when(request().withPath("/aws/internal/admin/validate")
+                .withBody(JsonBody.json(request))
+                .withMethod(HttpMethod.POST))
+                .withPriority(100)
+                .withId(MOCK_AWS_CLIENT)
+                .respond(httpRequest -> response().withStatusCode(Response.Status.NOT_FOUND.getStatusCode()));
+
         //Mockserver
-        mockServerClient.when(request().withPath("/internal/admin/users/search").withMethod(HttpMethod.POST)
+        mockServerClient.when(request().withPath("/keycloak/internal/admin/users/search").withMethod(HttpMethod.POST)
                 .withBody(JsonBody.json(userSearchCriteria)))
                 .withId(MOCK_ID)
                 .respond(httpRequest -> response().withStatusCode(Response.Status.BAD_REQUEST.getStatusCode())
@@ -151,7 +190,7 @@ public class AdminRestControllerTest extends AbstractTest {
         var res = given()
                 .when()
                 .auth().oauth2(keycloakClient.getAccessToken(ADMIN))
-                .header(APM_HEADER_PARAM, ADMIN)
+                .header(APM_HEADER_PARAM, keycloakClient.getAccessToken(ADMIN))
                 .contentType(APPLICATION_JSON)
                 .body(userSearchCriteriaDTO)
                 .post("/users/search")
@@ -180,8 +219,26 @@ public class AdminRestControllerTest extends AbstractTest {
         rolePageResult.setTotalElements(200L);
         rolePageResult.setStream(rolesList);
 
+        ValidateIssuerRequest request = new ValidateIssuerRequest();
+        request.setIssuer("testIssuer");
+        //Mock clients
+        mockServerClient.when(request().withPath("/keycloak/internal/admin/validate")
+                .withBody(JsonBody.json(request))
+                .withMethod(HttpMethod.POST))
+                .withPriority(100)
+                .withId(MOCK_KEYCLOAK_CLIENT)
+                .respond(httpRequest -> response().withStatusCode(Response.Status.OK.getStatusCode()));
+
+        //Mock clients
+        mockServerClient.when(request().withPath("/aws/internal/admin/validate")
+                .withBody(JsonBody.json(request))
+                .withMethod(HttpMethod.POST))
+                .withPriority(100)
+                .withId(MOCK_AWS_CLIENT)
+                .respond(httpRequest -> response().withStatusCode(Response.Status.NOT_FOUND.getStatusCode()));
+
         //Mockserver
-        mockServerClient.when(request().withPath("/internal/admin/roles/search")
+        mockServerClient.when(request().withPath("/keycloak/internal/admin/roles/search")
                 .withBody(JsonBody.json(new RoleSearchCriteria().issuer("testIssuer").name("rolesSearchTest1")))
                 .withMethod(HttpMethod.POST))
                 .withPriority(100)
@@ -198,7 +255,7 @@ public class AdminRestControllerTest extends AbstractTest {
         given()
                 .when()
                 .auth().oauth2(keycloakClient.getAccessToken(ADMIN))
-                .header(APM_HEADER_PARAM, ADMIN)
+                .header(APM_HEADER_PARAM, keycloakClient.getAccessToken(ADMIN))
                 .contentType(APPLICATION_JSON)
                 .body(roleSearchCriteriaDTO)
                 .post("/roles/search")
@@ -211,8 +268,26 @@ public class AdminRestControllerTest extends AbstractTest {
     void getUserRolesByUserId() {
         UserRolesResponseDTO rolesReponse = new UserRolesResponseDTO();
         rolesReponse.roles(List.of(new RoleDTO().name("role1")));
+
+        ValidateIssuerRequest request = new ValidateIssuerRequest();
+        request.setIssuer("testIssuer");
+        //Mock clients
+        mockServerClient.when(request().withPath("/keycloak/internal/admin/validate")
+                .withBody(JsonBody.json(request))
+                .withMethod(HttpMethod.POST))
+                .withPriority(100)
+                .withId(MOCK_KEYCLOAK_CLIENT)
+                .respond(httpRequest -> response().withStatusCode(Response.Status.OK.getStatusCode()));
+
+        //Mock clients
+        mockServerClient.when(request().withPath("/aws/internal/admin/validate")
+                .withBody(JsonBody.json(request))
+                .withMethod(HttpMethod.POST))
+                .withPriority(100)
+                .withId(MOCK_AWS_CLIENT)
+                .respond(httpRequest -> response().withStatusCode(Response.Status.NOT_FOUND.getStatusCode()));
         // create mock rest endpoint
-        mockServerClient.when(request().withPath("/internal/admin/user1/roles").withMethod(HttpMethod.POST)
+        mockServerClient.when(request().withPath("/keycloak/internal/admin/user1/roles").withMethod(HttpMethod.POST)
                 .withBody(JsonBody.json(new UserRolesSearchRequest().issuer("testIssuer"))))
                 .withId(MOCK_ID)
                 .withPriority(100)
@@ -223,7 +298,7 @@ public class AdminRestControllerTest extends AbstractTest {
         var result = given()
                 .when()
                 .auth().oauth2(keycloakClient.getAccessToken(ADMIN))
-                .header(APM_HEADER_PARAM, ADMIN)
+                .header(APM_HEADER_PARAM, keycloakClient.getAccessToken(ADMIN))
                 .contentType(APPLICATION_JSON)
                 .pathParam("userId", "user1")
                 .body(new SearchUserRolesRequestDTO().issuer("testIssuer"))
@@ -235,44 +310,107 @@ public class AdminRestControllerTest extends AbstractTest {
 
     @Test
     void getAllProvidersAndRealms() {
-        ProvidersResponse providersResponse = new ProvidersResponse();
-        providersResponse.setProviders(List.of(new Provider().name("kc1").domains(List.of(new Domain().name("realm1")))));
+        ProvidersResponse providersResponseKc = new ProvidersResponse();
+        providersResponseKc.setProviders(List.of(new Provider().name("kc1").domains(List.of(new Domain().name("realm1")))));
         // create mock rest endpoint
-        mockServerClient.when(request().withPath("/internal/admin/providers").withMethod(HttpMethod.GET))
+        mockServerClient.when(request().withPath("/keycloak/internal/admin/providers").withMethod(HttpMethod.GET))
                 .withId(MOCK_ID)
                 .withPriority(100)
                 .respond(httpRequest -> response().withStatusCode(Response.Status.OK.getStatusCode())
                         .withContentType(MediaType.APPLICATION_JSON)
-                        .withBody(JsonBody.json(providersResponse)));
+                        .withBody(JsonBody.json(providersResponseKc)));
+        ProvidersResponse providersResponseAws = new ProvidersResponse();
+
+        providersResponseAws.setProviders(List.of(new Provider().name("aws1").domains(List.of(new Domain().name("realm1")))));
+        mockServerClient.when(request().withPath("/aws/internal/admin/providers").withMethod(HttpMethod.GET))
+                .withId(MOCK_AWS_CLIENT)
+                .withPriority(100)
+                .respond(httpRequest -> response().withStatusCode(Response.Status.OK.getStatusCode())
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody(JsonBody.json(providersResponseAws)));
 
         var result = given()
                 .when()
                 .auth().oauth2(keycloakClient.getAccessToken(ADMIN))
-                .header(APM_HEADER_PARAM, ADMIN)
+                .header(APM_HEADER_PARAM, keycloakClient.getAccessToken(ADMIN))
                 .contentType(APPLICATION_JSON)
                 .get("/providers")
                 .then()
                 .statusCode(OK.getStatusCode()).extract().as(ProvidersResponseDTO.class);
-        Assertions.assertEquals("kc1", result.getProviders().get(0).getName());
-        Assertions.assertEquals("realm1", result.getProviders().get(0).getDomains().get(0).getName());
+        Assertions.assertEquals("kc1", result.getClients().get("keycloak").getProviders().get(0).getName());
+        Assertions.assertEquals("realm1",
+                result.getClients().get("keycloak").getProviders().get(0).getDomains().get(0).getName());
     }
 
     @Test
-    void getAllProvidersAndRealms_error_test() {
+    void searchUsersByCriteriaTest_unknown_issuer() {
 
-        // create mock rest endpoint
-        mockServerClient.when(request().withPath("/internal/admin/providers").withMethod(HttpMethod.GET))
-                .withId(MOCK_ID)
+        User user1 = new User();
+        user1.setId("userId1");
+        user1.setFirstName("firstname1");
+        user1.setLastName("lastname1");
+        user1.setUsername("username1");
+        user1.setEmail("user1@mail.com");
+
+        User user2 = new User();
+        user2.setId("userId2");
+        user2.setFirstName("firstname2");
+        user2.setLastName("lastname2");
+        user2.setUsername("username2");
+        user2.setEmail("user2@mail.com");
+
+        List<User> userList = new ArrayList<>();
+        userList.add(user1);
+        userList.add(user2);
+
+        UserPageResult userPageResult = new UserPageResult();
+        userPageResult.setNumber(20);
+        userPageResult.setTotalPages(5L);
+        userPageResult.setTotalElements(200L);
+        userPageResult.setStream(userList);
+        ValidateIssuerRequest request = new ValidateIssuerRequest();
+        request.setIssuer("randomIssuer");
+        //Mock clients
+        mockServerClient.when(request().withPath("/keycloak/internal/admin/validate")
+                .withBody(JsonBody.json(request))
+                .withMethod(HttpMethod.POST))
                 .withPriority(100)
+                .withId(MOCK_KEYCLOAK_CLIENT)
+                .respond(httpRequest -> response().withStatusCode(Response.Status.NOT_FOUND.getStatusCode()));
+
+        //Mock clients
+        mockServerClient.when(request().withPath("/aws/internal/admin/validate")
+                .withBody(JsonBody.json(request))
+                .withMethod(HttpMethod.POST))
+                .withPriority(100)
+                .withId(MOCK_AWS_CLIENT)
                 .respond(httpRequest -> response().withStatusCode(BAD_REQUEST.getStatusCode()));
 
+        //Mockserver
+        mockServerClient.when(request().withPath("/keycloak/internal/admin/users/search")
+                .withBody(JsonBody.json(new UserSearchCriteria().issuer("randomIssuer").pageSize(25).pageNumber(1)))
+                .withMethod(HttpMethod.POST))
+                .withPriority(100)
+                .withId(MOCK_ID)
+                .respond(httpRequest -> response().withStatusCode(Response.Status.OK.getStatusCode())
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody(JsonBody.json(userPageResult)));
+
+        UserSearchCriteriaDTO userSearchCriteriaDTO = new UserSearchCriteriaDTO();
+        userSearchCriteriaDTO.setIssuer("randomIssuer");
+        userSearchCriteriaDTO.setPageNumber(1);
+        userSearchCriteriaDTO.setPageSize(25);
+
+        //Restassured
         given()
                 .when()
                 .auth().oauth2(keycloakClient.getAccessToken(ADMIN))
-                .header(APM_HEADER_PARAM, ADMIN)
+                .header(APM_HEADER_PARAM, keycloakClient.getAccessToken(ADMIN))
                 .contentType(APPLICATION_JSON)
-                .get("/providers")
+                .body(userSearchCriteriaDTO)
+                .post("/users/search")
                 .then()
                 .statusCode(BAD_REQUEST.getStatusCode());
+
     }
 }

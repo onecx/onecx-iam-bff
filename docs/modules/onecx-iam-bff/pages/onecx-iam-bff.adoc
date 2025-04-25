@@ -1,0 +1,65 @@
+:summaryTableId: onecx-iam-bff
+[.configuration-legend]
+icon:lock[title=Fixed at build time] Configuration property fixed at build time - All other configuration properties are overridable at runtime
+[.configuration-reference.searchable, cols="80,.^10,.^10"]
+|===
+
+h|[.header-title]##Configuration property##
+h|Type
+h|Default
+
+a| [[onecx-iam-bff_onecx-iam-clients-clients-url]] [.property-path]##link:#onecx-iam-bff_onecx-iam-clients-clients-url[`onecx.iam.clients."clients".url`]##
+
+[.description]
+--
+Url of the iam rest client.
+
+
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++ONECX_IAM_CLIENTS__CLIENTS__URL+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
+Environment variable: `+++ONECX_IAM_CLIENTS__CLIENTS__URL+++`
+endif::add-copy-button-to-env-var[]
+--
+|string
+|required icon:exclamation-circle[title=Configuration property is required]
+
+a| [[onecx-iam-bff_onecx-iam-clients-clients-shared]] [.property-path]##link:#onecx-iam-bff_onecx-iam-clients-clients-shared[`onecx.iam.clients."clients".shared`]##
+
+[.description]
+--
+Set to true to share the HTTP client between REST clients.
+
+
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++ONECX_IAM_CLIENTS__CLIENTS__SHARED+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
+Environment variable: `+++ONECX_IAM_CLIENTS__CLIENTS__SHARED+++`
+endif::add-copy-button-to-env-var[]
+--
+|boolean
+|`true`
+
+a| [[onecx-iam-bff_onecx-iam-clients-clients-connection-pool-size]] [.property-path]##link:#onecx-iam-bff_onecx-iam-clients-clients-connection-pool-size[`onecx.iam.clients."clients".connection-pool-size`]##
+
+[.description]
+--
+The size of the rest client connection pool.
+
+
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++ONECX_IAM_CLIENTS__CLIENTS__CONNECTION_POOL_SIZE+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
+Environment variable: `+++ONECX_IAM_CLIENTS__CLIENTS__CONNECTION_POOL_SIZE+++`
+endif::add-copy-button-to-env-var[]
+--
+|int
+|`30`
+
+|===
+
+
+:!summaryTableId:

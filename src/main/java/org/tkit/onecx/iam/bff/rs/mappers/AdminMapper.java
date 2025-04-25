@@ -8,8 +8,10 @@ import gen.org.tkit.onecx.iam.kc.client.model.*;
 
 @Mapper
 public interface AdminMapper {
-    @Mapping(target = "removeProvidersItem", ignore = true)
-    ProvidersResponseDTO map(ProvidersResponse providersResponse);
+    //    @Mapping(target = "removeClientsItem", ignore = true)
+    //    @Mapping(target = "clients", ignore = true)
+    //    @Mapping(target = "removeProvidersItem", ignore = true)
+    //    ProvidersResponseDTO map(ProvidersResponse providersResponse);
 
     @Mapping(target = "removeDomainsItem", ignore = true)
     ProviderDTO map(Provider provider);
@@ -31,4 +33,7 @@ public interface AdminMapper {
     UserSearchCriteria map(UserSearchCriteriaDTO criteria);
 
     UserRolesSearchRequest map(SearchUserRolesRequestDTO searchUserRequestDTO);
+
+    @Mapping(target = "removeProvidersItem", ignore = true)
+    ProvidersResponseClientsValueDTO maps(ProvidersResponse clientResponse);
 }

@@ -1,9 +1,12 @@
 package org.tkit.onecx.iam.bff.rs.mappers;
 
+import java.util.Map;
+
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 import gen.org.tkit.onecx.iam.bff.rs.internal.model.ProviderDTO;
+import gen.org.tkit.onecx.iam.bff.rs.internal.model.ProvidersResponseClientsValueDTO;
 import gen.org.tkit.onecx.iam.bff.rs.internal.model.ProvidersResponseDTO;
 import gen.org.tkit.onecx.iam.bff.rs.internal.model.UserResetPasswordRequestDTO;
 import gen.org.tkit.onecx.iam.kc.client.model.Provider;
@@ -19,6 +22,9 @@ public interface UserMapper {
     ProviderDTO map(Provider provider);
 
     @Mapping(target = "removeProvidersItem", ignore = true)
-    ProvidersResponseDTO map(ProvidersResponse providersResponse);
+    ProvidersResponseClientsValueDTO map(ProvidersResponse clientResponse);
 
+    default ProvidersResponseDTO map(String clientKey, ProvidersResponse providersResponse) {
+        return new ProvidersResponseDTO().clients(Map.of(clientKey, map(providersResponse)));
+    }
 }

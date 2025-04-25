@@ -72,6 +72,10 @@
         </dependency>
         <dependency>
             <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-cache</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.quarkus</groupId>
             <artifactId>quarkus-hibernate-validator</artifactId>
         </dependency>
         <dependency>
@@ -179,8 +183,7 @@
                         </goals>
                         <configuration>
                             <url>
-                                https://raw.githubusercontent.com/onecx/onecx-iam-kc-svc/main/src/main/openapi/onecx-iam-kc-svc-internal.yaml
-                            </url>
+                                https://raw.githubusercontent.com/JordenReuter/onecx-iam-kc-svc/refs/heads/eature/multi-kc-support/src/main/openapi/onecx-iam-kc-svc-internal.yaml                            </url>
                             <outputDirectory>target/tmp/openapi</outputDirectory>
                             <outputFileName>onecx-iam-kc-svc.yaml</outputFileName>
                             <skipCache>true</skipCache>
