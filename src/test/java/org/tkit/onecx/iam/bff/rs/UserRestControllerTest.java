@@ -11,7 +11,6 @@ import java.util.List;
 import jakarta.ws.rs.HttpMethod;
 import jakarta.ws.rs.core.Response;
 
-import org.jose4j.jwt.consumer.InvalidJwtException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,8 +19,6 @@ import org.mockserver.model.JsonBody;
 import org.mockserver.model.MediaType;
 import org.tkit.onecx.iam.bff.rs.controllers.UserRestController;
 import org.tkit.quarkus.log.cdi.LogService;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
 
 import gen.org.tkit.onecx.iam.bff.rs.internal.model.ProblemDetailResponseDTO;
 import gen.org.tkit.onecx.iam.bff.rs.internal.model.ProvidersResponseDTO;
@@ -35,7 +32,7 @@ import io.quarkus.test.keycloak.client.KeycloakTestClient;
 @QuarkusTest
 @LogService
 @TestHTTPEndpoint(UserRestController.class)
-public class UserRestControllerTest extends AbstractTest {
+class UserRestControllerTest extends AbstractTest {
 
     @InjectMockServerClient
     MockServerClient mockServerClient;
@@ -88,7 +85,7 @@ public class UserRestControllerTest extends AbstractTest {
     }
 
     @Test
-    void resetPasswordTest_shouldReturnBadRequest_whenBodyIsRequestBodyEmpty() throws InvalidJwtException {
+    void resetPasswordTest_shouldReturnBadRequest_whenBodyIsRequestBodyEmpty() {
         var tokens = getTokens(keycloakClient, ADMIN);
         var aliceToken = tokens.getIdToken();
 
@@ -109,7 +106,7 @@ public class UserRestControllerTest extends AbstractTest {
     }
 
     @Test
-    void resetPasswordTest_shouldReturnBadRequest_whenBadRequestResponse() throws InvalidJwtException {
+    void resetPasswordTest_shouldReturnBadRequest_whenBadRequestResponse() {
         UserResetPasswordRequest userResetPasswordRequest = new UserResetPasswordRequest();
         userResetPasswordRequest.setPassword("new_password");
 
@@ -162,7 +159,7 @@ public class UserRestControllerTest extends AbstractTest {
     }
 
     @Test
-    void getUserProviderAndRealm() throws JsonProcessingException, InvalidJwtException {
+    void getUserProviderAndRealm() {
         var tokens = getTokens(keycloakClient, ADMIN);
         var aliceToken = tokens.getIdToken();
 

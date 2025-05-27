@@ -92,7 +92,6 @@ h| Version
 | https://github.com/quarkusio/quarkusio.github.io/blob/develop/_generated-doc/latest/config/quarkus-cache.adoc[Link]
 | 3.20.1
 
-
 | quarkus-hibernate-validator
 
 | https://quarkus.io/guides/validation[Link]
@@ -141,6 +140,7 @@ h| Version
 | 
 | 
 | 3.20.1
+
 
 |===| tkit-quarkus-oidc-health
 

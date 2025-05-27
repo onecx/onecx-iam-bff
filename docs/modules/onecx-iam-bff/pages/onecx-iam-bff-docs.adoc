@@ -24,7 +24,6 @@ quarkus.openapi-generator.codegen.spec.onecx_iam_kc_svc_yaml.additional-api-type
 quarkus.openapi-generator.codegen.spec.onecx_iam_kc_svc_yaml.additional-model-type-annotations=@io.quarkus.runtime.annotations.RegisterForReflection;
 quarkus.openapi-generator.codegen.spec.onecx_iam_kc_svc_yaml.enable-security-generation=false
 %prod.quarkus.rest-client.onecx_iam_kc_svc.providers=io.quarkus.oidc.client.reactive.filter.OidcClientRequestReactiveFilter
-%prod.quarkus.oidc-client.client-id=${quarkus.application.name}
 ----
 ====
 
@@ -68,6 +67,9 @@ app:
         spec:
           kcConfig:
             defaultClientScopes: [ ocx-ia:all, ocx-pm:read ]
+----
+
+         defaultClientScopes: [ ocx-ia:all, ocx-pm:read ]
 ----
 
 

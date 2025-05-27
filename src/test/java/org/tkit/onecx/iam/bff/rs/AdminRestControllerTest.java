@@ -32,7 +32,7 @@ import io.quarkus.test.keycloak.client.KeycloakTestClient;
 @QuarkusTest
 @LogService
 @TestHTTPEndpoint(AdminRestController.class)
-public class AdminRestControllerTest extends AbstractTest {
+class AdminRestControllerTest extends AbstractTest {
 
     @InjectMockServerClient
     MockServerClient mockServerClient;
