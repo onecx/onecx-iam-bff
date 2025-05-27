@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.tkit.onecx</groupId>
         <artifactId>onecx-quarkus3-parent</artifactId>
-        <version>0.72.4</version>
+        <version>1.2.0</version>
     </parent>
 
     <artifactId>onecx-iam-bff</artifactId>
@@ -183,7 +183,7 @@
                         </goals>
                         <configuration>
                             <url>
-                                https://raw.githubusercontent.com/JordenReuter/onecx-iam-kc-svc/refs/heads/eature/multi-kc-support/src/main/openapi/onecx-iam-kc-svc-internal.yaml                            </url>
+                                https://raw.githubusercontent.com/onecx/onecx-iam-svc/refs/heads/main/src/main/openapi/onecx-iam-svc-internal.yaml                            </url>
                             <outputDirectory>target/tmp/openapi</outputDirectory>
                             <outputFileName>onecx-iam-kc-svc.yaml</outputFileName>
                             <skipCache>true</skipCache>

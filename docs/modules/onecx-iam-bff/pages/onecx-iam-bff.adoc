@@ -1,4 +1,3 @@
-:summaryTableId: onecx-iam-bff
 [.configuration-legend]
 icon:lock[title=Fixed at build time] Configuration property fixed at build time - All other configuration properties are overridable at runtime
 [.configuration-reference.searchable, cols="80,.^10,.^10"]
@@ -9,6 +8,10 @@ h|Type
 h|Default
 
 a| [[onecx-iam-bff_onecx-iam-clients-clients-url]] [.property-path]##link:#onecx-iam-bff_onecx-iam-clients-clients-url[`onecx.iam.clients."clients".url`]##
+ifdef::add-copy-button-to-config-props[]
+config_property_copy_button:+++onecx.iam.clients."clients".url+++[]
+endif::add-copy-button-to-config-props[]
+
 
 [.description]
 --
@@ -26,6 +29,10 @@ endif::add-copy-button-to-env-var[]
 |required icon:exclamation-circle[title=Configuration property is required]
 
 a| [[onecx-iam-bff_onecx-iam-clients-clients-shared]] [.property-path]##link:#onecx-iam-bff_onecx-iam-clients-clients-shared[`onecx.iam.clients."clients".shared`]##
+ifdef::add-copy-button-to-config-props[]
+config_property_copy_button:+++onecx.iam.clients."clients".shared+++[]
+endif::add-copy-button-to-config-props[]
+
 
 [.description]
 --
@@ -43,6 +50,10 @@ endif::add-copy-button-to-env-var[]
 |`true`
 
 a| [[onecx-iam-bff_onecx-iam-clients-clients-connection-pool-size]] [.property-path]##link:#onecx-iam-bff_onecx-iam-clients-clients-connection-pool-size[`onecx.iam.clients."clients".connection-pool-size`]##
+ifdef::add-copy-button-to-config-props[]
+config_property_copy_button:+++onecx.iam.clients."clients".connection-pool-size+++[]
+endif::add-copy-button-to-config-props[]
+
 
 [.description]
 --
@@ -61,5 +72,3 @@ endif::add-copy-button-to-env-var[]
 
 |===
 
-
-:!summaryTableId:

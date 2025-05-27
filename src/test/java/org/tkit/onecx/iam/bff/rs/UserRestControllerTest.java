@@ -6,14 +6,11 @@ import static jakarta.ws.rs.core.Response.Status.*;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
 
-import java.nio.charset.StandardCharsets;
-import java.util.Base64;
 import java.util.List;
 
 import jakarta.ws.rs.HttpMethod;
 import jakarta.ws.rs.core.Response;
 
-import org.jose4j.jwt.JwtClaims;
 import org.jose4j.jwt.consumer.InvalidJwtException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -34,7 +31,6 @@ import io.quarkiverse.mockserver.test.InjectMockServerClient;
 import io.quarkus.test.common.http.TestHTTPEndpoint;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.keycloak.client.KeycloakTestClient;
-import io.smallrye.jwt.auth.principal.DefaultJWTCallerPrincipal;
 
 @QuarkusTest
 @LogService
@@ -62,35 +58,15 @@ public class UserRestControllerTest extends AbstractTest {
     }
 
     @Test
-    void resetPasswordTest() throws InvalidJwtException {
+    void resetPasswordTest() {
 
         var tokens = getTokens(keycloakClient, ADMIN);
         var aliceToken = tokens.getIdToken();
-        String json = new String(Base64.getUrlDecoder().decode(aliceToken.split("\\.")[1]), StandardCharsets.UTF_8);
-        var jwt = new DefaultJWTCallerPrincipal(JwtClaims.parse(json));
-
-        ValidateIssuerRequest request = new ValidateIssuerRequest();
-        request.setIssuer(jwt.getIssuer());
-        //Mock clients
-        mockServerClient.when(request().withPath("/keycloak/internal/admin/validate")
-                .withBody(JsonBody.json(request))
-                .withMethod(HttpMethod.POST))
-                .withPriority(100)
-                .withId(MOCK_KEYCLOAK_CLIENT)
-                .respond(httpRequest -> response().withStatusCode(Response.Status.OK.getStatusCode()));
-
-        //Mock clients
-        mockServerClient.when(request().withPath("/aws/internal/admin/validate")
-                .withBody(JsonBody.json(request))
-                .withMethod(HttpMethod.POST))
-                .withPriority(100)
-                .withId(MOCK_AWS_CLIENT)
-                .respond(httpRequest -> response().withStatusCode(Response.Status.NOT_FOUND.getStatusCode()));
 
         UserResetPasswordRequest passwortReset = new UserResetPasswordRequest();
         passwortReset.setPassword("new_password");
         //Mockserver
-        mockServerClient.when(request().withPath("/keycloak/internal/me/password")
+        mockServerClient.when(request().withPath("/internal/me/password")
                 .withMethod(HttpMethod.PUT).withBody(JsonBody.json(passwortReset)))
                 .withPriority(100)
                 .withId(MOCK_ID)
@@ -142,29 +118,9 @@ public class UserRestControllerTest extends AbstractTest {
 
         var tokens = getTokens(keycloakClient, ADMIN);
         var aliceToken = tokens.getIdToken();
-        String json = new String(Base64.getUrlDecoder().decode(aliceToken.split("\\.")[1]), StandardCharsets.UTF_8);
-        var jwt = new DefaultJWTCallerPrincipal(JwtClaims.parse(json));
-
-        ValidateIssuerRequest request = new ValidateIssuerRequest();
-        request.setIssuer(jwt.getIssuer());
-        //Mock clients
-        mockServerClient.when(request().withPath("/keycloak/internal/admin/validate")
-                .withBody(JsonBody.json(request))
-                .withMethod(HttpMethod.POST))
-                .withPriority(100)
-                .withId(MOCK_KEYCLOAK_CLIENT)
-                .respond(httpRequest -> response().withStatusCode(Response.Status.OK.getStatusCode()));
-
-        //Mock clients
-        mockServerClient.when(request().withPath("/aws/internal/admin/validate")
-                .withBody(JsonBody.json(request))
-                .withMethod(HttpMethod.POST))
-                .withPriority(100)
-                .withId(MOCK_AWS_CLIENT)
-                .respond(httpRequest -> response().withStatusCode(Response.Status.NOT_FOUND.getStatusCode()));
 
         //Mockserver
-        mockServerClient.when(request().withPath("/keycloak/internal/me/password").withMethod(HttpMethod.PUT)
+        mockServerClient.when(request().withPath("/internal/me/password").withMethod(HttpMethod.PUT)
                 .withBody(JsonBody.json(userResetPasswordRequest)))
                 .withId(MOCK_ID)
                 .respond(httpRequest -> response().withStatusCode(Response.Status.BAD_REQUEST.getStatusCode())
@@ -209,32 +165,12 @@ public class UserRestControllerTest extends AbstractTest {
     void getUserProviderAndRealm() throws JsonProcessingException, InvalidJwtException {
         var tokens = getTokens(keycloakClient, ADMIN);
         var aliceToken = tokens.getIdToken();
-        String json = new String(Base64.getUrlDecoder().decode(aliceToken.split("\\.")[1]), StandardCharsets.UTF_8);
-        var jwt = new DefaultJWTCallerPrincipal(JwtClaims.parse(json));
-
-        ValidateIssuerRequest request = new ValidateIssuerRequest();
-        request.setIssuer(jwt.getIssuer());
-        //Mock clients
-        mockServerClient.when(request().withPath("/keycloak/internal/admin/validate")
-                .withBody(JsonBody.json(request))
-                .withMethod(HttpMethod.POST))
-                .withPriority(100)
-                .withId(MOCK_KEYCLOAK_CLIENT)
-                .respond(httpRequest -> response().withStatusCode(Response.Status.OK.getStatusCode()));
-
-        //Mock clients
-        mockServerClient.when(request().withPath("/aws/internal/admin/validate")
-                .withBody(JsonBody.json(request))
-                .withMethod(HttpMethod.POST))
-                .withPriority(100)
-                .withId(MOCK_AWS_CLIENT)
-                .respond(httpRequest -> response().withStatusCode(Response.Status.NOT_FOUND.getStatusCode()));
 
         ProvidersResponse providersResponse = new ProvidersResponse();
         providersResponse.setProviders(List.of(new Provider().name("kc1").domains(List.of(new Domain().name("realm1")))));
 
         // create mock rest endpoint
-        mockServerClient.when(request().withPath("/keycloak/internal/me/provider").withMethod(HttpMethod.GET))
+        mockServerClient.when(request().withPath("/internal/me/provider").withMethod(HttpMethod.GET))
                 .withId(MOCK_ID)
                 .withPriority(100)
                 .respond(httpRequest -> response().withStatusCode(Response.Status.OK.getStatusCode())
@@ -249,8 +185,8 @@ public class UserRestControllerTest extends AbstractTest {
                 .get("/provider")
                 .then()
                 .statusCode(OK.getStatusCode()).extract().as(ProvidersResponseDTO.class);
-        Assertions.assertEquals("kc1", result.getClients().get("keycloak").getProviders().get(0).getName());
+        Assertions.assertEquals("kc1", result.getProviders().get(0).getName());
         Assertions.assertEquals("realm1",
-                result.getClients().get("keycloak").getProviders().get(0).getDomains().get(0).getName());
+                result.getProviders().get(0).getDomains().get(0).getName());
     }
 }

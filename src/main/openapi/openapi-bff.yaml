@@ -195,18 +195,16 @@ components:
     ProvidersResponse:
       type: object
       properties:
-        clients:
-          additionalProperties:
-            type: object
-            properties:
-              providers:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Provider'
+        providers:
+          type: array
+          items:
+            $ref: '#/components/schemas/Provider'
     Provider:
       type: object
       properties:
         name:
+          type: string
+        displayName:
           type: string
         description:
           type: string
