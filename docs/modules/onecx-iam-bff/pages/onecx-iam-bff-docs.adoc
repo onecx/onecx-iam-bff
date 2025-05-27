@@ -14,7 +14,7 @@ quarkus.http.auth.permission.default.paths=/*
 quarkus.http.auth.permission.default.policy=authenticated
 onecx.permissions.application-id=${quarkus.application.name}
 org.eclipse.microprofile.rest.client.propagateHeaders=apm-principal-token
-%prod.quarkus.oidc-client.client-id=${quarkus.application.name}
+%prod.quarkus.oidc-client.client-id=${ONECX_OIDC_CLIENT_CLIENT_ID:${quarkus.application.name}}
 %prod.quarkus.rest-client.onecx_iam_kc_svc.url=http://onecx-iam-kc-svc:8080
 quarkus.openapi-generator.codegen.input-base-dir=target/tmp/openapi
 quarkus.openapi-generator.codegen.spec.onecx_iam_kc_svc_yaml.config-key=onecx_iam_kc_svc
@@ -47,6 +47,8 @@ Default values
 ----
 app:
   name: bff
+  template:
+    oidc_client_id: "ONECX_OIDC_CLIENT_CLIENT_ID"
   image:
     repository: "onecx/onecx-iam-bff"
   operator:
@@ -69,10 +71,6 @@ app:
             defaultClientScopes: [ ocx-ia:all, ocx-pm:read ]
 ----
 
-         defaultClientScopes: [ ocx-ia:all, ocx-pm:read ]
-----
-
-
-            defaultClientScopes: [ ocx-ia:all, ocx-pm:read ]
+pes: [ ocx-ia:all, ocx-pm:read ]
 ----
 
