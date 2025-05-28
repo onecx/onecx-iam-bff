@@ -23,7 +23,7 @@ quarkus.openapi-generator.codegen.spec.onecx_iam_kc_svc_yaml.additional-api-type
 quarkus.openapi-generator.codegen.spec.onecx_iam_kc_svc_yaml.additional-model-type-annotations=@io.quarkus.runtime.annotations.RegisterForReflection;
 quarkus.openapi-generator.codegen.spec.onecx_iam_kc_svc_yaml.enable-security-generation=false
 %prod.quarkus.rest-client.onecx_iam_kc_svc.providers=io.quarkus.oidc.client.reactive.filter.OidcClientRequestReactiveFilter
-%prod.quarkus.oidc-client.client-id=${quarkus.application.name}
+%prod.quarkus.oidc-client.client-id=${ONECX_OIDC_CLIENT_CLIENT_ID:${quarkus.application.name}}
 ----
 ====
 
@@ -47,6 +47,8 @@ Default values
 ----
 app:
   name: bff
+  template:
+    oidc_client_id: "ONECX_OIDC_CLIENT_CLIENT_ID"
   image:
     repository: "onecx/onecx-iam-bff"
   operator:
