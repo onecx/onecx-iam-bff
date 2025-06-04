@@ -185,7 +185,7 @@
                             <url>
                                 https://raw.githubusercontent.com/onecx/onecx-iam-svc/refs/heads/main/src/main/openapi/onecx-iam-svc-internal.yaml                            </url>
                             <outputDirectory>target/tmp/openapi</outputDirectory>
-                            <outputFileName>onecx-iam-kc-svc.yaml</outputFileName>
+                            <outputFileName>onecx-iam-svc.yaml</outputFileName>
                             <skipCache>true</skipCache>
                         </configuration>
                     </execution>

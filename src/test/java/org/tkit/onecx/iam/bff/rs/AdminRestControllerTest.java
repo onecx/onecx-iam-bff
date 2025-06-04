@@ -23,7 +23,7 @@ import org.tkit.onecx.iam.bff.rs.controllers.AdminRestController;
 import org.tkit.quarkus.log.cdi.LogService;
 
 import gen.org.tkit.onecx.iam.bff.rs.internal.model.*;
-import gen.org.tkit.onecx.iam.kc.client.model.*;
+import gen.org.tkit.onecx.iam.client.model.*;
 import io.quarkiverse.mockserver.test.InjectMockServerClient;
 import io.quarkus.test.common.http.TestHTTPEndpoint;
 import io.quarkus.test.junit.QuarkusTest;

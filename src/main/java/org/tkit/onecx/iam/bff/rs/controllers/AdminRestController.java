@@ -14,11 +14,11 @@ import org.tkit.onecx.iam.bff.rs.mappers.ExceptionMapper;
 
 import gen.org.tkit.onecx.iam.bff.rs.internal.AdminInternalApiService;
 import gen.org.tkit.onecx.iam.bff.rs.internal.model.*;
-import gen.org.tkit.onecx.iam.kc.client.api.AdminInternalApi;
-import gen.org.tkit.onecx.iam.kc.client.model.ProvidersResponse;
-import gen.org.tkit.onecx.iam.kc.client.model.RolePageResult;
-import gen.org.tkit.onecx.iam.kc.client.model.UserPageResult;
-import gen.org.tkit.onecx.iam.kc.client.model.UserRolesResponse;
+import gen.org.tkit.onecx.iam.client.api.AdminInternalApi;
+import gen.org.tkit.onecx.iam.client.model.ProvidersResponse;
+import gen.org.tkit.onecx.iam.client.model.RolePageResult;
+import gen.org.tkit.onecx.iam.client.model.UserPageResult;
+import gen.org.tkit.onecx.iam.client.model.UserRolesResponse;
 
 @ApplicationScoped
 public class AdminRestController implements AdminInternalApiService {

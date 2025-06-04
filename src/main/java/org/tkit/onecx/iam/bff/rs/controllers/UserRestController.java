@@ -15,8 +15,8 @@ import org.tkit.onecx.iam.bff.rs.mappers.UserMapper;
 import gen.org.tkit.onecx.iam.bff.rs.internal.UserInternalApiService;
 import gen.org.tkit.onecx.iam.bff.rs.internal.model.ProblemDetailResponseDTO;
 import gen.org.tkit.onecx.iam.bff.rs.internal.model.UserResetPasswordRequestDTO;
-import gen.org.tkit.onecx.iam.kc.client.api.UserInternalApi;
-import gen.org.tkit.onecx.iam.kc.client.model.ProvidersResponse;
+import gen.org.tkit.onecx.iam.client.api.UserInternalApi;
+import gen.org.tkit.onecx.iam.client.model.ProvidersResponse;
 
 @ApplicationScoped
 public class UserRestController implements UserInternalApiService {

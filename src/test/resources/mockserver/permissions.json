@@ -11,11 +11,17 @@
           "appId": "onecx-iam-bff",
           "permissions": {
             "user": [
-              "read",
-              "write"
+              "admin-read",
+              "read"
             ],
-            "admin": [
-              "read",
+            "role": [
+              "admin-read"
+            ],
+            "provider": [
+              "admin-read",
+              "read"
+            ],
+            "password": [
               "write"
             ],
             "permissions": [

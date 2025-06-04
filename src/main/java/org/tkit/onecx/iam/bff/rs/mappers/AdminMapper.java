@@ -4,7 +4,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 import gen.org.tkit.onecx.iam.bff.rs.internal.model.*;
-import gen.org.tkit.onecx.iam.kc.client.model.*;
+import gen.org.tkit.onecx.iam.client.model.*;
 
 @Mapper
 public interface AdminMapper {

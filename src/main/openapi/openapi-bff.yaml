@@ -13,8 +13,8 @@ paths:
     post:
       x-onecx:
         permissions:
-          admin:
-            - read
+          user:
+            - admin-read
       tags:
         - AdminInternal
       summary: Search users by criteria
@@ -42,8 +42,8 @@ paths:
     post:
       x-onecx:
         permissions:
-          admin:
-            - read
+          role:
+            - admin-read
       tags:
         - AdminInternal
       summary: Get roles of user by id
@@ -77,8 +77,8 @@ paths:
     post:
       x-onecx:
         permissions:
-          admin:
-            - read
+          role:
+            - admin-read
       tags:
         - AdminInternal
       summary: Search roles by criteria
@@ -106,8 +106,8 @@ paths:
     get:
       x-onecx:
         permissions:
-          admin:
-            - read
+          provider:
+            - admin-read
       tags:
         - AdminInternal
       summary: Get all providers
@@ -129,7 +129,7 @@ paths:
     put:
       x-onecx:
         permissions:
-          user:
+          password:
             - write
       tags:
         - UserInternal
@@ -154,7 +154,7 @@ paths:
     get:
       x-onecx:
         permissions:
-          user:
+          provider:
             - read
       tags:
         - UserInternal
