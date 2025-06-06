@@ -224,6 +224,8 @@ components:
             $ref: '#/components/schemas/Role'
     UserSearchCriteria:
       type: object
+      required:
+        - issuer
       properties:
         userName:
           type: string
