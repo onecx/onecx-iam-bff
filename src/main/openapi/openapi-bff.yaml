@@ -6,8 +6,10 @@ info:
 servers:
   - url: "http://onecx-iam-bff:8080"
 tags:
-  - name: UsersInternal
-    description: Keycloak user internal service
+  - name: UserInternal
+    description: Iam user internal service
+  - name: adminInternal
+    description: Iam admin internal service
 paths:
   /admin/users/search:
     post:
