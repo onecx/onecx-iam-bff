@@ -277,6 +277,8 @@ components:
           type: string
         origin:
           type: string
+        provider:
+          type: string
         domain:
           type: string
         createdTimestamp:
