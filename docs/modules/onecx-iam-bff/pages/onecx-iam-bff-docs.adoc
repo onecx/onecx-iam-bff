@@ -14,16 +14,17 @@ quarkus.http.auth.permission.default.paths=/*
 quarkus.http.auth.permission.default.policy=authenticated
 onecx.permissions.application-id=${quarkus.application.name}
 org.eclipse.microprofile.rest.client.propagateHeaders=apm-principal-token
-%prod.quarkus.rest-client.onecx_iam_kc_svc.url=http://onecx-iam-kc-svc:8080
-quarkus.openapi-generator.codegen.input-base-dir=target/tmp/openapi
-quarkus.openapi-generator.codegen.spec.onecx_iam_kc_svc_yaml.config-key=onecx_iam_kc_svc
-quarkus.openapi-generator.codegen.spec.onecx_iam_kc_svc_yaml.base-package=gen.org.tkit.onecx.iam.kc.client
-quarkus.openapi-generator.codegen.spec.onecx_iam_kc_svc_yaml.return-response=true
-quarkus.openapi-generator.codegen.spec.onecx_iam_kc_svc_yaml.additional-api-type-annotations=@org.eclipse.microprofile.rest.client.annotation.RegisterClientHeaders
-quarkus.openapi-generator.codegen.spec.onecx_iam_kc_svc_yaml.additional-model-type-annotations=@io.quarkus.runtime.annotations.RegisterForReflection;
-quarkus.openapi-generator.codegen.spec.onecx_iam_kc_svc_yaml.enable-security-generation=false
-%prod.quarkus.rest-client.onecx_iam_kc_svc.providers=io.quarkus.oidc.client.reactive.filter.OidcClientRequestReactiveFilter
 %prod.quarkus.oidc-client.client-id=${ONECX_OIDC_CLIENT_CLIENT_ID:${quarkus.application.name}}
+%prod.quarkus.rest-client.onecx_iam_svc.url=http://onecx-iam-svc:8080
+quarkus.openapi-generator.codegen.input-base-dir=target/tmp/openapi
+quarkus.openapi-generator.codegen.spec.onecx_iam_svc_yaml.config-key=onecx_iam_svc
+quarkus.openapi-generator.codegen.spec.onecx_iam_svc_yaml.base-package=gen.org.tkit.onecx.iam.client
+quarkus.openapi-generator.codegen.spec.onecx_iam_svc_yaml.return-response=true
+quarkus.openapi-generator.codegen.spec.onecx_iam_svc_yaml.additional-api-type-annotations=@org.eclipse.microprofile.rest.client.annotation.RegisterClientHeaders
+quarkus.openapi-generator.codegen.spec.onecx_iam_svc_yaml.additional-model-type-annotations=@io.quarkus.runtime.annotations.RegisterForReflection;
+quarkus.openapi-generator.codegen.spec.onecx_iam_svc_yaml.enable-security-generation=false
+%prod.quarkus.rest-client.onecx_iam_kc_svc.providers=io.quarkus.oidc.client.reactive.filter.OidcClientRequestReactiveFilter
+%prod.quarkus.oidc-client.client-id=${ONECX_OIDC_CLIENT_CLIENT_ID:${quarkus.application.name}}=======
 ----
 ====
 
@@ -58,17 +59,19 @@ app:
       spec:
         permissions:
           user:
-            read: permission on all GET requests and POST search
-            write: permission on PUT, POST, PATCH requests, where objects are saved or updated
+            admin-read: permission on all GET requests and POST search for admin operations
           role:
-            read: permission on all GET requests and POST search
-          realm:
-            read: permission on all GET requests and POST search
+            admin-read: permission on all GET requests and POST search for admin operations
+          provider:
+            admin-read: permission on all GET requests and POST search for admin operations
+            read: permission on all GET requests and POST search for user operations
+          password:
+            write: permission on PUT, POST, PATCH requests, where objects are saved or updated
     keycloak:
       client:
         enabled: true
         spec:
           kcConfig:
-            defaultClientScopes: [ ocx-ia:all, ocx-pm:read  ]
+            defaultClientScopes: [ ocx-ia:all, ocx-pm:read ]
 ----
 

@@ -11,15 +11,17 @@ app:
       spec:
         permissions:
           user:
-            read: permission on all GET requests and POST search
-            write: permission on PUT, POST, PATCH requests, where objects are saved or updated
+            admin-read: permission on all GET requests and POST search for admin operations
           role:
-            read: permission on all GET requests and POST search
-          realm:
-            read: permission on all GET requests and POST search
+            admin-read: permission on all GET requests and POST search for admin operations
+          provider:
+            admin-read: permission on all GET requests and POST search for admin operations
+            read: permission on all GET requests and POST search for user operations
+          password:
+            write: permission on PUT, POST, PATCH requests, where objects are saved or updated
     keycloak:
       client:
         enabled: true
         spec:
           kcConfig:
-            defaultClientScopes: [ ocx-ia:all, ocx-pm:read  ]
+            defaultClientScopes: [ ocx-ia:all, ocx-pm:read ]

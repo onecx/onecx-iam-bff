@@ -20,7 +20,7 @@ import org.tkit.quarkus.rs.mappers.OffsetDateTimeMapper;
 import gen.org.tkit.onecx.iam.bff.rs.internal.model.ProblemDetailInvalidParamDTO;
 import gen.org.tkit.onecx.iam.bff.rs.internal.model.ProblemDetailParamDTO;
 import gen.org.tkit.onecx.iam.bff.rs.internal.model.ProblemDetailResponseDTO;
-import gen.org.tkit.onecx.iam.kc.client.model.ProblemDetailResponse;
+import gen.org.tkit.onecx.iam.client.model.ProblemDetailResponse;
 
 @Mapper(uses = { OffsetDateTimeMapper.class })
 public interface ExceptionMapper {

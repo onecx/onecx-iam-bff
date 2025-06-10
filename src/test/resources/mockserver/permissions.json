@@ -2,11 +2,6 @@
   {
     "id": "1",
     "httpRequest": {
-      "headers": {
-        "apm-principal-token": [
-          "alice"
-        ]
-      },
       "path": "/v1/permissions/user/applications/onecx-iam-bff"
     },
     "httpResponse": {
@@ -16,48 +11,18 @@
           "appId": "onecx-iam-bff",
           "permissions": {
             "user": [
-              "read",
-              "write",
-              "delete"
+              "admin-read",
+              "read"
             ],
             "role": [
-              "read",
-              "write",
-              "delete"
-            ],
-            "realm": [
-              "read"
-            ],
-            "permissions": [
-              "admin-write",
               "admin-read"
-            ]
-          }
-        },
-        "contentType": "application/json"
-      }
-    }
-  },
-  {
-    "id": "2",
-    "httpRequest": {
-      "headers": {
-        "apm-principal-token": [
-          "bob"
-        ]
-      },
-      "path": "/v1/permissions/user/applications/onecx-iam-bff"
-    },
-    "httpResponse": {
-      "body": {
-        "type": "JSON",
-        "json": {
-          "appId": "onecx-iam-bff",
-          "permissions": {
-            "user": ["read"],
-            "role": ["read"],
-            "realm": [
+            ],
+            "provider": [
+              "admin-read",
               "read"
+            ],
+            "password": [
+              "write"
             ],
             "permissions": [
               "admin-write",

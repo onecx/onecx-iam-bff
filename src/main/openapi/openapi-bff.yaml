@@ -6,17 +6,19 @@ info:
 servers:
   - url: "http://onecx-iam-bff:8080"
 tags:
-  - name: UsersInternal
-    description: Keycloak user internal service
+  - name: UserInternal
+    description: Iam user internal service
+  - name: adminInternal
+    description: Iam admin internal service
 paths:
-  /users/search:
+  /admin/users/search:
     post:
       x-onecx:
         permissions:
           user:
-            - read
+            - admin-read
       tags:
-        - UsersInternal
+        - AdminInternal
       summary: Search users by criteria
       operationId: searchUsersByCriteria
       requestBody:
@@ -38,39 +40,49 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ProblemDetailResponse'
-  /users/password:
-    put:
+  /admin/{userId}/roles:
+    post:
       x-onecx:
         permissions:
-          user:
-            - write
+          role:
+            - admin-read
       tags:
-        - UsersInternal
-      summary: Reset user password
-      operationId: resetPassword
+        - AdminInternal
+      summary: Get roles of user by id
+      operationId: getUserRoles
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: Keycloak userId
+          schema:
+            type: string
       requestBody:
-        required: true
         content:
-          application/json:
+          "application/json":
             schema:
-              $ref: '#/components/schemas/UserResetPasswordRequest'
+              $ref: '#/components/schemas/SearchUserRolesRequest'
       responses:
-        204:
-          description: Reset password succeeded
+        200:
+          description: OK
+          content:
+            "application/json":
+              schema:
+                $ref: '#/components/schemas/UserRolesResponse'
         400:
           description: Bad request
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ProblemDetailResponse'
-  /roles/search:
+  /admin/roles/search:
     post:
       x-onecx:
         permissions:
           role:
-            - read
+            - admin-read
       tags:
-        - RolesInternal
+        - AdminInternal
       summary: Search roles by criteria
       operationId: searchRolesByCriteria
       requestBody:
@@ -92,53 +104,71 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ProblemDetailResponse'
-  /roles/{userId}:
+  /admin/providers:
     get:
       x-onecx:
         permissions:
-          role:
-            - read
+          provider:
+            - admin-read
       tags:
-        - RolesInternal
-      summary: Get roles of user by id
-      operationId: getUserRoles
-      parameters:
-        - name: userId
-          in: path
-          required: true
-          description: Keycloak userId
-          schema:
-            type: string
+        - AdminInternal
+      summary: Get all providers
+      operationId: getAllProviders
       responses:
         200:
           description: OK
           content:
-            "application/json":
+            application/json:
               schema:
-                $ref: '#/components/schemas/UserRolesResponse'
+                $ref: '#/components/schemas/ProvidersResponse'
         400:
           description: Bad request
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ProblemDetailResponse'
-  /realms:
+  /me/password:
+    put:
+      x-onecx:
+        permissions:
+          password:
+            - write
+      tags:
+        - UserInternal
+      summary: Reset user password
+      operationId: resetPassword
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserResetPasswordRequest'
+      responses:
+        204:
+          description: Reset password succeeded
+        400:
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetailResponse'
+  /me/provider:
     get:
       x-onecx:
         permissions:
-          realm:
+          provider:
             - read
       tags:
-        - RealmsInternal
-      summary: Get all realms
-      operationId: getAllRealms
+        - UserInternal
+      summary: Get user provider
+      operationId: getUserProvider
       responses:
         200:
           description: OK
           content:
             "application/json":
               schema:
-                $ref: '#/components/schemas/RealmResponse'
+                $ref: '#/components/schemas/ProvidersResponse'
         400:
           description: Bad request
           content:
@@ -147,13 +177,44 @@ paths:
                 $ref: '#/components/schemas/ProblemDetailResponse'
 components:
   schemas:
-    RealmResponse:
+    SearchUserRolesRequest:
+      type: object
+      required:
+        - issuer
+      properties:
+        issuer:
+          type: string
+    ProvidersResponse:
       type: object
       properties:
-        realms:
+        providers:
           type: array
           items:
-            type: string
+            $ref: '#/components/schemas/Provider'
+    Provider:
+      type: object
+      properties:
+        name:
+          type: string
+        displayName:
+          type: string
+        description:
+          type: string
+        fromToken:
+          type: boolean
+        domains:
+          type: array
+          items:
+            $ref: '#/components/schemas/Domain'
+    Domain:
+      type: object
+      properties:
+        name:
+          type: string
+        displayName:
+          type: string
+        issuer:
+          type: string
     UserRolesResponse:
       type: object
       properties:
@@ -163,6 +224,8 @@ components:
             $ref: '#/components/schemas/Role'
     UserSearchCriteria:
       type: object
+      required:
+        - issuer
       properties:
         userName:
           type: string
@@ -172,9 +235,9 @@ components:
           type: string
         userId:
           type: string
-        realm:
-          type: string
         email:
+          type: string
+        issuer:
           type: string
         pageNumber:
           format: int32
@@ -214,6 +277,10 @@ components:
           type: string
         origin:
           type: string
+        provider:
+          type: string
+        domain:
+          type: string
         createdTimestamp:
           $ref: '#/components/schemas/OffsetDateTime'
         username:
@@ -224,14 +291,21 @@ components:
           type: string
         email:
           type: string
-        realm:
-          type: string
         attributes:
           type: object
           additionalProperties:
             type: array
             items:
               type: string
+    UserResetPasswordRequest:
+      type: object
+      required:
+        - password
+      properties:
+        password:
+          type: string
+          format: password
+          minLength: 1
     ProblemDetailResponse:
       type: object
       properties:
@@ -247,19 +321,14 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ProblemDetailInvalidParam'
-    UserResetPasswordRequest:
-      type: object
-      required:
-        - password
-      properties:
-        password:
-          type: string
-          format: password
-          minLength: 1
     RoleSearchCriteria:
       type: object
+      required:
+        - issuer
       properties:
         name:
+          type: string
+        issuer:
           type: string
         pageNumber:
           format: int32
