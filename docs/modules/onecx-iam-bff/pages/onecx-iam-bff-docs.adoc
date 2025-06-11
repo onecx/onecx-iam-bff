@@ -14,7 +14,6 @@ quarkus.http.auth.permission.default.paths=/*
 quarkus.http.auth.permission.default.policy=authenticated
 onecx.permissions.application-id=${quarkus.application.name}
 org.eclipse.microprofile.rest.client.propagateHeaders=apm-principal-token
-%prod.quarkus.oidc-client.client-id=${ONECX_OIDC_CLIENT_CLIENT_ID:${quarkus.application.name}}
 %prod.quarkus.rest-client.onecx_iam_svc.url=http://onecx-iam-svc:8080
 quarkus.openapi-generator.codegen.input-base-dir=target/tmp/openapi
 quarkus.openapi-generator.codegen.spec.onecx_iam_svc_yaml.config-key=onecx_iam_svc
@@ -23,8 +22,8 @@ quarkus.openapi-generator.codegen.spec.onecx_iam_svc_yaml.return-response=true
 quarkus.openapi-generator.codegen.spec.onecx_iam_svc_yaml.additional-api-type-annotations=@org.eclipse.microprofile.rest.client.annotation.RegisterClientHeaders
 quarkus.openapi-generator.codegen.spec.onecx_iam_svc_yaml.additional-model-type-annotations=@io.quarkus.runtime.annotations.RegisterForReflection;
 quarkus.openapi-generator.codegen.spec.onecx_iam_svc_yaml.enable-security-generation=false
-%prod.quarkus.rest-client.onecx_iam_kc_svc.providers=io.quarkus.oidc.client.reactive.filter.OidcClientRequestReactiveFilter
-%prod.quarkus.oidc-client.client-id=${ONECX_OIDC_CLIENT_CLIENT_ID:${quarkus.application.name}}=======
+%prod.quarkus.rest-client.onecx_iam_svc.providers=io.quarkus.oidc.client.reactive.filter.OidcClientRequestReactiveFilter
+%prod.quarkus.oidc-client.client-id=${ONECX_OIDC_CLIENT_CLIENT_ID:${quarkus.application.name}}
 ----
 ====
 
@@ -70,6 +69,12 @@ app:
     keycloak:
       client:
         enabled: true
+        spec:
+          kcConfig:
+            defaultClientScopes: [ ocx-ia:all, ocx-pm:read ]
+----
+
+rue
         spec:
           kcConfig:
             defaultClientScopes: [ ocx-ia:all, ocx-pm:read ]
