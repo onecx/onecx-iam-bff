@@ -59,8 +59,10 @@ app:
         permissions:
           user:
             admin-read: permission on all GET requests and POST search for admin operations
+            admin-write: permission on all POST and PUT requests for admin operations
           role:
             admin-read: permission on all GET requests and POST search for admin operations
+            admin-write: permission on all POST and PUT requests for admin operations
           provider:
             admin-read: permission on all GET requests and POST search for admin operations
             read: permission on all GET requests and POST search for user operations
@@ -69,12 +71,6 @@ app:
     keycloak:
       client:
         enabled: true
-        spec:
-          kcConfig:
-            defaultClientScopes: [ ocx-ia:all, ocx-pm:read ]
-----
-
-rue
         spec:
           kcConfig:
             defaultClientScopes: [ ocx-ia:all, ocx-pm:read ]

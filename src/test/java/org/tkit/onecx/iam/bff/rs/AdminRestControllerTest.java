@@ -2,8 +2,7 @@ package org.tkit.onecx.iam.bff.rs;
 
 import static io.restassured.RestAssured.given;
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
-import static jakarta.ws.rs.core.Response.Status.BAD_REQUEST;
-import static jakarta.ws.rs.core.Response.Status.OK;
+import static jakarta.ws.rs.core.Response.Status.*;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
 
@@ -40,15 +39,11 @@ class AdminRestControllerTest extends AbstractTest {
     KeycloakTestClient keycloakClient = new KeycloakTestClient();
 
     static final String MOCK_ID = "MOCK_ID";
-    static final String MOCK_KEYCLOAK_CLIENT = "MOCK_KC";
-    static final String MOCK_AWS_CLIENT = "MOCK_AWS";
 
     @BeforeEach
     void resetExpectation() {
         try {
             mockServerClient.clear(MOCK_ID);
-            mockServerClient.clear(MOCK_KEYCLOAK_CLIENT);
-            mockServerClient.clear(MOCK_AWS_CLIENT);
         } catch (Exception ex) {
             //  mockId not existing
         }
@@ -249,15 +244,6 @@ class AdminRestControllerTest extends AbstractTest {
                 .respond(httpRequest -> response().withStatusCode(Response.Status.OK.getStatusCode())
                         .withContentType(MediaType.APPLICATION_JSON)
                         .withBody(JsonBody.json(providersResponseKc)));
-        ProvidersResponse providersResponseAws = new ProvidersResponse();
-
-        providersResponseAws.setProviders(List.of(new Provider().name("aws1").domains(List.of(new Domain().name("realm1")))));
-        mockServerClient.when(request().withPath("/aws/internal/admin/providers").withMethod(HttpMethod.GET))
-                .withId(MOCK_AWS_CLIENT)
-                .withPriority(100)
-                .respond(httpRequest -> response().withStatusCode(Response.Status.OK.getStatusCode())
-                        .withContentType(MediaType.APPLICATION_JSON)
-                        .withBody(JsonBody.json(providersResponseAws)));
 
         var result = given()
                 .when()
@@ -270,5 +256,121 @@ class AdminRestControllerTest extends AbstractTest {
         Assertions.assertEquals("kc1", result.getProviders().get(0).getName());
         Assertions.assertEquals("realm1",
                 result.getProviders().get(0).getDomains().get(0).getName());
+    }
+
+    @Test
+    void createUserTest() {
+        CreateUserRequest request = new CreateUserRequest();
+        request.setEmail("test@test.com");
+        request.setIssuer("someIss");
+        request.setUsername("userName");
+        request.setLastName("lastName");
+        request.setFirstName("firstName");
+        request.setTemporaryPassword("pw");
+        // create mock rest endpoint
+        mockServerClient.when(request().withPath("/internal/admin/users").withMethod(HttpMethod.POST)
+                .withBody(JsonBody.json(request)))
+                .withId(MOCK_ID)
+                .withPriority(100)
+                .respond(httpRequest -> response().withStatusCode(Response.Status.CREATED.getStatusCode()));
+
+        CreateUserRequestDTO requestDTO = new CreateUserRequestDTO();
+        requestDTO.setEmail("test@test.com");
+        requestDTO.setIssuer("someIss");
+        requestDTO.setUsername("userName");
+        requestDTO.setLastName("lastName");
+        requestDTO.setFirstName("firstName");
+        requestDTO.setTemporaryPassword("pw");
+        given()
+                .when()
+                .auth().oauth2(keycloakClient.getAccessToken(ADMIN))
+                .header(APM_HEADER_PARAM, keycloakClient.getAccessToken(ADMIN))
+                .contentType(APPLICATION_JSON)
+                .body(requestDTO)
+                .post("/users")
+                .then()
+                .statusCode(CREATED.getStatusCode());
+    }
+
+    @Test
+    void updateUsertest() {
+        UpdateUserRequest request = new UpdateUserRequest();
+        request.setIssuer("newIss");
+        request.setEmail("test@test.com");
+        // create mock rest endpoint
+        mockServerClient.when(request().withPath("/internal/admin/users/123").withMethod(HttpMethod.PUT)
+                .withBody(JsonBody.json(request)))
+                .withId(MOCK_ID)
+                .withPriority(100)
+                .respond(httpRequest -> response().withStatusCode(Response.Status.NO_CONTENT.getStatusCode()));
+
+        UpdateUserRequestDTO requestDTO = new UpdateUserRequestDTO();
+        requestDTO.setIssuer("newIss");
+        requestDTO.setEmail("test@test.com");
+
+        given()
+                .when()
+                .auth().oauth2(keycloakClient.getAccessToken(ADMIN))
+                .header(APM_HEADER_PARAM, keycloakClient.getAccessToken(ADMIN))
+                .contentType(APPLICATION_JSON)
+                .body(requestDTO)
+                .put("/users/123")
+                .then()
+                .statusCode(NO_CONTENT.getStatusCode());
+    }
+
+    @Test
+    void createRoleTest() {
+        CreateRoleRequest request = new CreateRoleRequest();
+        request.setIssuer("iss");
+        request.setName("newRole");
+        request.setDescription("desc");
+        // create mock rest endpoint
+        mockServerClient.when(request().withPath("/internal/admin/roles").withMethod(HttpMethod.POST)
+                .withBody(JsonBody.json(request)))
+                .withId(MOCK_ID)
+                .withPriority(100)
+                .respond(httpRequest -> response().withStatusCode(Response.Status.CREATED.getStatusCode()));
+
+        CreateRoleRequestDTO requestDTO = new CreateRoleRequestDTO();
+        requestDTO.setIssuer("iss");
+        requestDTO.setName("newRole");
+        requestDTO.setDescription("desc");
+        given()
+                .when()
+                .auth().oauth2(keycloakClient.getAccessToken(ADMIN))
+                .header(APM_HEADER_PARAM, keycloakClient.getAccessToken(ADMIN))
+                .contentType(APPLICATION_JSON)
+                .body(requestDTO)
+                .post("/roles")
+                .then()
+                .statusCode(CREATED.getStatusCode());
+    }
+
+    @Test
+    void assignRoleTest() {
+        RoleAssignmentRequest request = new RoleAssignmentRequest();
+        request.setIssuer("iss");
+        request.setName("role1");
+        // create mock rest endpoint
+        mockServerClient.when(request().withPath("/internal/admin/123/roles/assign").withMethod(HttpMethod.POST)
+                .withBody(JsonBody.json(request)))
+                .withId(MOCK_ID)
+                .withPriority(100)
+                .respond(httpRequest -> response().withStatusCode(Response.Status.NO_CONTENT.getStatusCode()));
+
+        RoleAssignmentRequestDTO requestDTO = new RoleAssignmentRequestDTO();
+        requestDTO.setIssuer("iss");
+        requestDTO.setName("role1");
+
+        given()
+                .when()
+                .auth().oauth2(keycloakClient.getAccessToken(ADMIN))
+                .header(APM_HEADER_PARAM, keycloakClient.getAccessToken(ADMIN))
+                .contentType(APPLICATION_JSON)
+                .body(requestDTO)
+                .post("/123/roles/assign")
+                .then()
+                .statusCode(NO_CONTENT.getStatusCode());
     }
 }

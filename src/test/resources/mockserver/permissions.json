@@ -12,10 +12,12 @@
           "permissions": {
             "user": [
               "admin-read",
+              "admin-write",
               "read"
             ],
             "role": [
-              "admin-read"
+              "admin-read",
+              "admin-write"
             ],
             "provider": [
               "admin-read",

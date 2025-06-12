@@ -32,4 +32,12 @@ public interface AdminMapper {
 
     @Mapping(target = "removeProvidersItem", ignore = true)
     ProvidersResponseDTO mapProviders(ProvidersResponse clientResponse);
+
+    RoleAssignmentRequest mapRoleAssignment(RoleAssignmentRequestDTO roleAssignmentRequestDTO);
+
+    CreateRoleRequest mapCreateRole(CreateRoleRequestDTO createRoleRequestDTO);
+
+    CreateUserRequest mapCreateUser(CreateUserRequestDTO createUserRequestDTO);
+
+    UpdateUserRequest mapUpdateUser(UpdateUserRequestDTO updateUserRequestDTO);
 }
