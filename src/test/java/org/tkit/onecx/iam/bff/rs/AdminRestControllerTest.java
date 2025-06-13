@@ -351,7 +351,7 @@ class AdminRestControllerTest extends AbstractTest {
     void assignRoleTest() {
         RoleAssignmentRequest request = new RoleAssignmentRequest();
         request.setIssuer("iss");
-        request.setName("role1");
+        request.setNames(List.of("role1"));
         // create mock rest endpoint
         mockServerClient.when(request().withPath("/internal/admin/123/roles/assign").withMethod(HttpMethod.POST)
                 .withBody(JsonBody.json(request)))
@@ -361,7 +361,7 @@ class AdminRestControllerTest extends AbstractTest {
 
         RoleAssignmentRequestDTO requestDTO = new RoleAssignmentRequestDTO();
         requestDTO.setIssuer("iss");
-        requestDTO.setName("role1");
+        requestDTO.setNames(List.of("role1"));
 
         given()
                 .when()

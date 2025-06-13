@@ -403,8 +403,10 @@ components:
       properties:
         issuer:
           type: string
-        name:
-          type: string
+        names:
+          type: array
+          items:
+            type: string
     CreateUserRequest:
       type: object
       required:
