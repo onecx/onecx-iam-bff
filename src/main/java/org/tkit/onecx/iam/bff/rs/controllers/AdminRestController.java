@@ -34,6 +34,27 @@ public class AdminRestController implements AdminInternalApiService {
     AdminInternalApi client;
 
     @Override
+    public Response assignUserRole(String userId, RoleAssignmentRequestDTO roleAssignmentRequestDTO) {
+        try (Response response = client.assignUserRole(userId, adminMapper.mapRoleAssignment(roleAssignmentRequestDTO))) {
+            return Response.status(response.getStatus()).build();
+        }
+    }
+
+    @Override
+    public Response createRole(CreateRoleRequestDTO createRoleRequestDTO) {
+        try (Response response = client.createRole(adminMapper.mapCreateRole(createRoleRequestDTO))) {
+            return Response.status(response.getStatus()).build();
+        }
+    }
+
+    @Override
+    public Response createUser(CreateUserRequestDTO createUserRequestDTO) {
+        try (Response response = client.createUser(adminMapper.mapCreateUser(createUserRequestDTO))) {
+            return Response.status(response.getStatus()).build();
+        }
+    }
+
+    @Override
     public Response getAllProviders() {
         try (Response response = client.getAllProviders()) {
             var clientResponse = response.readEntity(ProvidersResponse.class);
@@ -62,6 +83,13 @@ public class AdminRestController implements AdminInternalApiService {
         try (Response response = client.searchUsersByCriteria(adminMapper.map(userSearchCriteriaDTO))) {
             UserPageResultDTO userPageResult = adminMapper.map(response.readEntity(UserPageResult.class));
             return Response.status(response.getStatus()).entity(userPageResult).build();
+        }
+    }
+
+    @Override
+    public Response updateUser(String userId, UpdateUserRequestDTO updateUserRequestDTO) {
+        try (Response response = client.updateUser(userId, adminMapper.mapUpdateUser(updateUserRequestDTO))) {
+            return Response.status(response.getStatus()).build();
         }
     }
 
