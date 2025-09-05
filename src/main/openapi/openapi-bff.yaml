@@ -1,15 +1,16 @@
 ---
 openapi: 3.0.3
 info:
-  title: OneCx IAM Bff
+  title: onecx-iam-bff
+  description: Backend-For-Frontend (BFF) service for onecx-iam. This API provides endpoints to perform operation on the Identity Management System
   version: 1.0.0
 servers:
   - url: "http://onecx-iam-bff:8080"
 tags:
-  - name: UserInternal
-    description: Iam user internal service
+  - name: userInternal
+    description: Managing the requesting users IDM account.
   - name: adminInternal
-    description: Iam admin internal service
+    description: Managing IDM Users and Roles as and Admin.
 paths:
   /admin/users/search:
     post:
@@ -18,8 +19,8 @@ paths:
           user:
             - admin-read
       tags:
-        - AdminInternal
-      summary: Search users by criteria
+        - adminInternal
+      description: Search for users by criteria
       operationId: searchUsersByCriteria
       requestBody:
         required: true
@@ -29,7 +30,7 @@ paths:
               $ref: '#/components/schemas/UserSearchCriteria'
       responses:
         200:
-          description: OK
+          description: User search results retrieved successfully
           content:
             "application/json":
               schema:
@@ -47,8 +48,8 @@ paths:
           user:
             - admin-write
       tags:
-        - AdminInternal
-      summary: create new user
+        - adminInternal
+      description: Create an new user
       operationId: createUser
       requestBody:
         required: true
@@ -58,7 +59,7 @@ paths:
               $ref: '#/components/schemas/CreateUserRequest'
       responses:
         201:
-          description: CREATED
+          description: User created successfully
         400:
           description: Bad request
           content:
@@ -72,8 +73,8 @@ paths:
           user:
             - admin-write
       tags:
-        - AdminInternal
-      summary: update user
+        - adminInternal
+      description: Update an user by its id
       operationId: updateUser
       parameters:
         - name: userId
@@ -90,7 +91,7 @@ paths:
               $ref: '#/components/schemas/UpdateUserRequest'
       responses:
         204:
-          description: UPDATED
+          description: User updated successfully
         400:
           description: Bad request
           content:
@@ -104,8 +105,8 @@ paths:
           role:
             - admin-read
       tags:
-        - AdminInternal
-      summary: Get roles of user by id
+        - adminInternal
+      description: Get all roles of an user by its id
       operationId: getUserRoles
       parameters:
         - name: userId
@@ -121,7 +122,7 @@ paths:
               $ref: '#/components/schemas/SearchUserRolesRequest'
       responses:
         200:
-          description: OK
+          description: Role retrieved successfully
           content:
             "application/json":
               schema:
@@ -139,8 +140,8 @@ paths:
           role:
             - admin-write
       tags:
-        - AdminInternal
-      summary: Assign role to user
+        - adminInternal
+      description: Assign a list of roles to an user by its id
       operationId: assignUserRole
       parameters:
         - name: userId
@@ -156,7 +157,7 @@ paths:
               $ref: '#/components/schemas/RoleAssignmentRequest'
       responses:
         204:
-          description: UPDATED
+          description: User updated successfully
         400:
           description: Bad request
           content:
@@ -170,8 +171,8 @@ paths:
           role:
             - admin-read
       tags:
-        - AdminInternal
-      summary: Search roles by criteria
+        - adminInternal
+      description: Search for roles by criteria
       operationId: searchRolesByCriteria
       requestBody:
         required: true
@@ -181,7 +182,7 @@ paths:
               $ref: '#/components/schemas/RoleSearchCriteria'
       responses:
         200:
-          description: OK
+          description: Role search results retrieved successfully
           content:
             "application/json":
               schema:
@@ -199,8 +200,8 @@ paths:
           role:
             - admin-read
       tags:
-        - AdminInternal
-      summary: Create a new role
+        - adminInternal
+      description: Create a new role
       operationId: createRole
       requestBody:
         required: true
@@ -210,7 +211,7 @@ paths:
               $ref: '#/components/schemas/CreateRoleRequest'
       responses:
         201:
-          description: CREATED
+          description: Role created successfully
         400:
           description: Bad request
           content:
@@ -224,12 +225,12 @@ paths:
           provider:
             - admin-read
       tags:
-        - AdminInternal
-      summary: Get all providers
+        - adminInternal
+      description: Get all registered providers
       operationId: getAllProviders
       responses:
         200:
-          description: OK
+          description: Providers retrieved successfully
           content:
             application/json:
               schema:
@@ -247,8 +248,8 @@ paths:
           password:
             - write
       tags:
-        - UserInternal
-      summary: Reset user password
+        - userInternal
+      description: Reset the password of the requesting user
       operationId: resetPassword
       requestBody:
         required: true
@@ -258,7 +259,7 @@ paths:
               $ref: '#/components/schemas/UserResetPasswordRequest'
       responses:
         204:
-          description: Reset password succeeded
+          description: Password resetted successfully
         400:
           description: Bad request
           content:
@@ -272,12 +273,12 @@ paths:
           provider:
             - read
       tags:
-        - UserInternal
-      summary: Get user provider
+        - userInternal
+      description: Get the provider of the requesting user
       operationId: getUserProvider
       responses:
         200:
-          description: OK
+          description: Provider retrieved successfully
           content:
             "application/json":
               schema:
