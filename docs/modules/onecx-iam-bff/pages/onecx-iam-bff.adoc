@@ -47,7 +47,7 @@ Environment variable: `+++ONECX_IAM_CLIENTS__CLIENTS__SHARED+++`
 endif::add-copy-button-to-env-var[]
 --
 |boolean
-|`true`
+|`+++true+++`
 
 a| [[onecx-iam-bff_onecx-iam-clients-clients-connection-pool-size]] [.property-path]##link:#onecx-iam-bff_onecx-iam-clients-clients-connection-pool-size[`onecx.iam.clients."clients".connection-pool-size`]##
 ifdef::add-copy-button-to-config-props[]
@@ -68,7 +68,7 @@ Environment variable: `+++ONECX_IAM_CLIENTS__CLIENTS__CONNECTION_POOL_SIZE+++`
 endif::add-copy-button-to-env-var[]
 --
 |int
-|`30`
+|`+++30+++`
 
 |===
 

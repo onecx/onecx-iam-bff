@@ -32,8 +32,10 @@ public interface ExceptionMapper {
     }
 
     default Response clientException(ClientWebApplicationException ex) {
-        if (ex.getResponse().getStatus() == 500) {
-            return Response.status(400).build();
+        if (ex.getResponse().getStatus() == Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()) {
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        } else if (ex.getResponse().getStatus() == Response.Status.NOT_FOUND.getStatusCode()) {
+            return Response.status(Response.Status.NOT_FOUND).build();
         } else {
             if (ex.getResponse().getMediaType() != null
                     && ex.getResponse().getMediaType().toString().contains(APPLICATION_JSON)) {
