@@ -10,6 +10,7 @@
     </parent>
 
     <artifactId>onecx-iam-bff</artifactId>
+    <name>OneCX Identity Access Management Backend For Frontend</name>
     <version>999-SNAPSHOT</version>
 
     <dependencies>
