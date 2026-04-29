@@ -49,7 +49,7 @@ class UserRestControllerTest extends AbstractTest {
             mockServerClient.clear(MOCK_ID);
             mockServerClient.clear(MOCK_KEYCLOAK_CLIENT);
             mockServerClient.clear(MOCK_AWS_CLIENT);
-        } catch (Exception ex) {
+        } catch (Exception _) {
             //  mockId not existing
         }
     }

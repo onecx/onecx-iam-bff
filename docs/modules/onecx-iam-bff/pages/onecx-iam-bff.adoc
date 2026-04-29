@@ -7,7 +7,7 @@ h|[.header-title]##Configuration property##
 h|Type
 h|Default
 
-a| [[onecx-iam-bff_onecx-iam-clients-clients-url]] [.property-path]##link:#onecx-iam-bff_onecx-iam-clients-clients-url[`onecx.iam.clients."clients".url`]##
+a| [[onecx-iam-bff_onecx-iam-clients-clients-url]] [.property-path]##link:#onecx-iam-bff_onecx-iam-clients-clients-url[`+++onecx.iam.clients."clients".url+++`]##
 ifdef::add-copy-button-to-config-props[]
 config_property_copy_button:+++onecx.iam.clients."clients".url+++[]
 endif::add-copy-button-to-config-props[]
@@ -28,7 +28,7 @@ endif::add-copy-button-to-env-var[]
 |string
 |required icon:exclamation-circle[title=Configuration property is required]
 
-a| [[onecx-iam-bff_onecx-iam-clients-clients-shared]] [.property-path]##link:#onecx-iam-bff_onecx-iam-clients-clients-shared[`onecx.iam.clients."clients".shared`]##
+a| [[onecx-iam-bff_onecx-iam-clients-clients-shared]] [.property-path]##link:#onecx-iam-bff_onecx-iam-clients-clients-shared[`+++onecx.iam.clients."clients".shared+++`]##
 ifdef::add-copy-button-to-config-props[]
 config_property_copy_button:+++onecx.iam.clients."clients".shared+++[]
 endif::add-copy-button-to-config-props[]
@@ -49,7 +49,7 @@ endif::add-copy-button-to-env-var[]
 |boolean
 |`+++true+++`
 
-a| [[onecx-iam-bff_onecx-iam-clients-clients-connection-pool-size]] [.property-path]##link:#onecx-iam-bff_onecx-iam-clients-clients-connection-pool-size[`onecx.iam.clients."clients".connection-pool-size`]##
+a| [[onecx-iam-bff_onecx-iam-clients-clients-connection-pool-size]] [.property-path]##link:#onecx-iam-bff_onecx-iam-clients-clients-connection-pool-size[`+++onecx.iam.clients."clients".connection-pool-size+++`]##
 ifdef::add-copy-button-to-config-props[]
 config_property_copy_button:+++onecx.iam.clients."clients".connection-pool-size+++[]
 endif::add-copy-button-to-config-props[]
